@@ -102,3 +102,13 @@ class WarehouseService:
         """Gesamtwert des Lagerbestands berechnen"""
         products = self.repository.load_all_products()
         return sum(p.get_total_value() for p in products.values())
+    
+    def delete_product(self, product_id: str) -> None:
+        """Löscht ein Produkt vollständig aus den Stammdaten"""
+        # Wir prüfen erst, ob es da ist
+        product = self.repository.load_product(product_id)
+        if not product:
+            raise ValueError(f"Produkt {product_id} nicht gefunden.")
+        
+        # Aufruf des Repository-Ports zum endgültigen Löschen
+        self.repository.delete_product(product_id)
