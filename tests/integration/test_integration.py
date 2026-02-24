@@ -49,6 +49,18 @@ class TestIntegration:
         inventory_report = report_adapter.generate_inventory_report()
         movement_report = report_adapter.generate_movement_report()
 
-        assert "Lagerbestandsbericht" in inventory_report or "Lagerbestandsbericht" not in inventory_report  # Placeholder
+        # Inhalte prüfen
+        assert "LAGERBESTANDSBERICHT" in inventory_report
+        assert "Gesamtwert Lager" in inventory_report
+        assert "BEWEGUNGSPROTOKOLL" in movement_report
+        assert "Gesamtbewegungen" in movement_report
         assert len(inventory_report) > 0
         assert len(movement_report) > 0
+
+        # zusätzlich: direkte Verwendung der Report-Klassen
+        from src.reports import InventoryReport, MovementReport
+
+        inv = InventoryReport(products)
+        mov = MovementReport(movements)
+        assert "Gesamtwert Lager" in inv.generate()
+        assert "Gesamtbewegungen" in mov.generate()

@@ -106,6 +106,7 @@ Generiert ein Bewegungsprotokoll.
 
 **Implementierungen:**
 - `ConsoleReportAdapter` (v0.1)
+- `InventoryReport` / `MovementReport` (v0.4) – reine Logikklassen (keine Ausgabe)
 
 ---
 

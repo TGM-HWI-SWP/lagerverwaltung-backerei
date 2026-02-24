@@ -224,19 +224,51 @@ class WarehouseMainWindow(QMainWindow):
 
     def _delete_product(self):
         """Produkt löschen"""
-        QMessageBox.information(self, "Info", "Delete-Funktion wird implementiert")
+        row = self.products_table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Hinweis", "Bitte wählen Sie ein Produkt in der Tabelle aus.")
+            return
+        product_id_item = self.products_table.item(row, 0)
+        if not product_id_item:
+            return
+        product_id = product_id_item.text()
+        try:
+            self.service.delete_product(product_id)
+            QMessageBox.information(self, "Erfolg", f"Produkt {product_id} gelöscht.")
+            self._refresh_products()
+        except Exception as e:
+            QMessageBox.critical(self, "Fehler", str(e))
 
     def _show_inventory_report(self):
         """Lagerbestandsbericht anzeigen"""
-        QMessageBox.information(
-            self, "Lagerbestandsbericht", "Report-Funktion wird implementiert"
-        )
+        products = self.service.get_all_products()
+        movements = self.service.get_movements()
+        from ..adapters.report import ConsoleReportAdapter
+
+        adapter = ConsoleReportAdapter(products, movements)
+        report = adapter.generate_inventory_report()
+        # längeren Text in Scrollbox anzeigen
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Lagerbestandsbericht")
+        dlg.setText(report)
+        dlg.setIcon(QMessageBox.Information)
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.exec()
 
     def _show_movement_report(self):
         """Bewegungsprotokoll anzeigen"""
-        QMessageBox.information(
-            self, "Bewegungsprotokoll", "Report-Funktion wird implementiert"
-        )
+        products = self.service.get_all_products()
+        movements = self.service.get_movements()
+        from ..adapters.report import ConsoleReportAdapter
+
+        adapter = ConsoleReportAdapter(products, movements)
+        report = adapter.generate_movement_report()
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Bewegungsprotokoll")
+        dlg.setText(report)
+        dlg.setIcon(QMessageBox.Information)
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.exec()
 
 
 def main():
