@@ -438,3 +438,4 @@ Zeit              | Produkt      | Typ    | Menge | Grund         | Nutzer
 - [ ] GraphML-Report-Generierung
 - [ ] Benutzer-Management erweitern
 - [ ] Batch-Operationen unterstützen
+- [ ] Benutzer-Management erweitern
