@@ -4,9 +4,11 @@ Persönliches Changelog für Rolle 1 (Contract Owner & Projektverantwortung)
 
 ---
 
-## [v0.2] - 2025-02-10
+## [v0.2] - 2026-02-24
 
 ### Implementiert
+
+#### Phase 1: Dokumentation & Planung (2026-02-10)
 - ✅ **Projektcharta & PSP überprüft** - Projektmanagement-Dokumentation validiert
 - ✅ **contracts.md erweitert** - GUIPort Schnittstelle hinzugefügt
 - ✅ **Exception Handling definiert** - 4 Custom Exceptions spezifiziert (ProductNotFoundError, InsufficientStockError, InvalidProductDataError, RepositoryError)
@@ -16,24 +18,39 @@ Persönliches Changelog für Rolle 1 (Contract Owner & Projektverantwortung)
 - ✅ **Bäckerei-Kategorien festgelegt** - 5 vordefinierte Kategorien: Brot, Backware, Kuchen, Süßes, Sonstiges
 - ✅ **Architektur-Diagramm erstellt** - Visual Übersicht aller Schnittstellen
 - ✅ **Rollen-Abhängigkeiten dokumentiert** - Klare Definition was Rolle 2, 3, 4 braucht
-- ✅ **REPOSITORY_SETUP.md erstellt** - Komplette Git-Workflow Anleitung für Team
+
+#### Phase 2: Code Refactoring & Release (2026-02-24)
+- ✅ **Codestruktur aufgeräumt** - Code aus __init__.py in separate Module verschoben
+  - `src/services/warehouse_service.py` (separate Datei)
+  - `src/ui/main_window.py` (separate Datei)
+  - `src/ui/dialogs.py` (separate Datei)
+- ✅ **Separation of Concerns** - __init__.py nur noch Imports, kein Code
+- ✅ **Contracts komplett überarbeitet** - Tabellen, Beispiele, Import-Patterns, Version-Matrix
+- ✅ **CHANGELOG.md erstellt** - Release-History dokumentiert
+- ✅ **RELEASE_NOTES_v0.2.md erstellt** - Ausführliche v0.2 Dokumentation
+- ✅ **pyproject.toml aktualisiert** - Version auf 0.2.0
+- ✅ **Feature-Branch Struktur initiiert** - feature/rolle1/contracts-v0.3, feature/rolle2/domain-models, etc.
+- ✅ **Team-Aufgabenliste erstellt** - ROLLE1_AUFGABEN_v0.3.md für Koordination
 
 ### Tests geschrieben
-- Keine (Dokumentation/Planung)
+- Keine (Dokumentation/Release)
 
 ### Commits
 ```
-- [Pending] Docs: Erweitere contracts.md mit GUIPort, Exceptions, Validierung
-- [Pending] Docs: Aktualisiere projektmanagement.md für Woche 1
+git tag -a v0.2.0 "Release v0.2.0: Walking Skeleton & Architektur"
+chore: release v0.2.0 - Walking Skeleton & Architektur
+refactor(structure): bereinige Code in __init__ Files und verbessere Ordnerstruktur
 ```
 
 ### Mergekonflikt(e)
-- Keine
+- Keine (Solo Development auf main)
 
 ### Notizen
-- ✔️ Woche 1 Dokumentation abgeschlossen
-- ✔️ Alle Schnittstellen definiert für Rolle 2, 3, 4
-- ⏳ Nächste Aufgaben: Repository-Setup, Team Kickoff, Woche 1 Planning
+- ✔️ v0.2 Release abgeschlossen
+- ✔️ Codequalität verbessert durch Modul-Separation
+- ✔️ Contracts für v0.3 Development vorbereitet
+- ✅ Feature-Branches auf develop bereit für Team-Arbeit
+- ⏳ Nächste Aufgaben: v0.3 Integration koordinieren, Merge-Konflikte handling trainieren
 
 ---
 
