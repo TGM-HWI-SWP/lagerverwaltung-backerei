@@ -44,23 +44,27 @@ noch keine
 
 ---
 
-## [v0.4] - [Datum]
+## [v0.4] - 24.02.2026
 
 ### Implementiert
-- [Feature/Fix]
+- **Inventur-Logik:** `adjust_stock_inventory` erstellt, um Bestandsdifferenzen automatisch zu berechnen und als ADJUST-Bewegung zu loggen.
+- **Preisanpassungs-Feature:** `update_category_prices` implementiert für prozentuale Massen-Updates von Produktpreisen innerhalb einer Kategorie.
+- **Reporting (Report A):** `ConsoleReportAdapter` grundlegend überarbeitet: Tabellarische Darstellung, Status-Indikatoren (OK/KNAPP/LEER) und Zusammenfassung kritischer Bestände.
+- **Validierung:** Sicherheits-Checks in `create_product` für Preise (nicht negativ), Namen (Mindestlänge) und Bestände hinzugefügt.
 
 ### Tests geschrieben
-- [Tests]
-
-### Commits
-```
-- [Commits]
-```
+- `tests/unit/test_warehouse_service.py`: Unit-Tests für Inventur-Abgleich, Mindestbestand-Erkennung und Produktlöschung.
+- `test_report_warning_indicator`: Integrationstest für die korrekte Anzeige von Warnungen im Report A.
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- Keine
 
----
+### Commits
+feat(service/repo): implement business logic sprint 1 (week 4)
+
+test(unit): add comprehensive unit tests for WarehouseService
+
+
 
 ## [v0.5] - [Datum]
 
