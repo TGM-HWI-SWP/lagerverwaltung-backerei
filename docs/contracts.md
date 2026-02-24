@@ -357,7 +357,6 @@ from ..services import WarehouseService  # JA!
 
 ## 7. Fehlerbehandlung
 
-<<<<<<< HEAD
 ### Exception-Typen
 
 ```python
@@ -448,10 +447,9 @@ def test_create_product():
 
 **Status:** v0.2.0 stabil  
 **Nächste Review:** Vor v0.3 Release
-=======
+
 - [ ] SQLite-Adapter implementieren
 - [ ] GraphML-Report-Generierung
 - [ ] Benutzer-Management erweitern
 - [ ] Batch-Operationen unterstützen
 - [ ] Benutzer-Management erweitern
->>>>>>> feature/rolle2/merge-test-v2
