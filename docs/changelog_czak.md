@@ -91,21 +91,32 @@ noch keine
 **Letzte Aktualisierung:** 24.02.2026  
 
 
-## [v0.5] - [Datum]
+## [v0.5] - 03.03.2026
 
 ### Implementiert
-- [Feature/Fix]
+- Abschluss von Report A: `InventoryReport` komplett, Statuslogik korrigiert
+- `MovementReport` Ausgabe verbessert (Header, ID einfügen, 0‑Bewegungen)
+- Refactoring des `ConsoleReportAdapter` zur Nutzung beider Reportklassen
+- GUI: Dialoge zeigen Berichte an; Produktlöschung funktional
+- Tests ergänzt und bestehende Fehler behoben
+- Integrationstest und Berechnungsassertionen korrigiert
+- Dokumentation an mehreren Stellen ergänzt (siehe v0.4 Eintrag)
 
 ### Tests geschrieben
-- [Tests]
+- Unit‑Tests für beide Reportklassen
+- Erweiterter `WarehouseService`‑Test (Kategoriepreise)
+- Zusätzliche Assertions in Integrationstest
 
 ### Commits
 ```
-- [Commits]
+- feat(rolle2): modular reports & GUI enhancements
+- test: add report unit tests and extend warehouse service tests
+- docs: update architecture, contracts, tests, README
+- chore: bump version, update changelog
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- keine (Konflikte in vorigen Versionen gelöst)
 
 ---
 
@@ -137,5 +148,5 @@ noch keine
 
 ---
 
-**Changelog erstellt von:** [Name]  
-**Letzte Aktualisierung:** [Datum]
+**Changelog erstellt von:** Przemyslaw Czak  
+**Letzte Aktualisierung:** 03.03.2026
