@@ -82,7 +82,7 @@ class WarehouseMainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Lagerverwaltungssystem v0.1.0")
+        self.setWindowTitle("Lagerverwaltungssystem v0.4.0")
         self.setGeometry(100, 100, 1000, 600)
 
         # Initialisiere Service

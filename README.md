@@ -242,7 +242,7 @@ Die folgenden PM-Dokumente sind als Word/Markdown zu erstellen:
 ### Version Format
 ```
 MAJOR.MINOR.PATCH
-0.1.0
+0.4.0
 ```
 
 ### Tags im Repository
