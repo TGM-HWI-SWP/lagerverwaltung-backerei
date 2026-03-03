@@ -1,6 +1,6 @@
 """Services - Business Logic Layer"""
 
-from datetime import datetime
+from datetime import datetime, date
 from typing import Dict, List, Optional
 
 from ..domain.product import Product
@@ -102,3 +102,90 @@ class WarehouseService:
         """Gesamtwert des Lagerbestands berechnen"""
         products = self.repository.load_all_products()
         return sum(p.get_total_value() for p in products.values())
+
+    def filter_movements_by_date(
+        self, start_date: date, end_date: date
+    ) -> List[Movement]:
+        """
+        Lagerbewegungen nach Datumsbereich filtern
+
+        Args:
+            start_date: Starttag (inklusive)
+            end_date: Enddatum (inklusive)
+
+        Returns:
+            Liste gefilterte Lagerbewegungen
+        """
+        movements = self.repository.load_movements()
+        filtered = [
+            m
+            for m in movements
+            if start_date <= m.timestamp.date() <= end_date
+        ]
+        return filtered
+
+    def filter_movements_by_type(self, movement_type: str) -> List[Movement]:
+        """
+        Lagerbewegungen nach Typ filtern
+
+        Args:
+            movement_type: z.B. "IN", "OUT", "CORRECTION"
+
+        Returns:
+            Liste gefilterte Lagerbewegungen
+        """
+        movements = self.repository.load_movements()
+        return [m for m in movements if m.movement_type == movement_type]
+
+    def get_movements_for_product(self, product_id: str) -> List[Movement]:
+        """
+        Alle Lagerbewegungen für ein bestimmtes Produkt abrufen
+
+        Args:
+            product_id: ID des Produkts
+
+        Returns:
+            Liste von Lagerbewegungen
+        """
+        movements = self.repository.load_movements()
+        return [m for m in movements if m.product_id == product_id]
+
+    def generate_movement_report(self) -> str:
+        """
+        Bewegungsprotokoll generieren (Report B Teil 1)
+
+        Returns:
+            Formatiertes Bewegungsprotokoll als String
+        """
+        from ..adapters.report import ConsoleReportAdapter
+
+        products = self.repository.load_all_products()
+        movements = self.repository.load_movements()
+        adapter = ConsoleReportAdapter(products=products, movements=movements)
+        return adapter.generate_movement_report()
+
+    def generate_statistics_report(self) -> str:
+        """
+        Statistikreport über Lagerbewegungen generieren (Report B Teil 2)
+
+        Returns:
+            Formatierter Statistikreport als String
+        """
+        from ..adapters.report import ConsoleReportAdapter
+
+        movements = self.repository.load_movements()
+        adapter = ConsoleReportAdapter(movements=movements)
+        return adapter.generate_statistics_report()
+
+    def generate_inventory_report(self) -> str:
+        """
+        Lagerbestandsbericht generieren (Report A)
+
+        Returns:
+            Formatierter Lagerbestandsbericht als String
+        """
+        from ..adapters.report import ConsoleReportAdapter
+
+        products = self.repository.load_all_products()
+        adapter = ConsoleReportAdapter(products=products)
+        return adapter.generate_inventory_report()

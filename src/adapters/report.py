@@ -71,3 +71,79 @@ class ConsoleReportAdapter(ReportPort):
         report += "=" * 80 + "\n"
 
         return report
+
+    def generate_statistics_report(self) -> str:
+        """
+        Statistikreport über Lagerbewegungen generieren
+
+        Returns:
+            Formatierter Statistik-Bericht
+        """
+        if not self.movements:
+            return "Keine Lagerbewegungen für Statistik vorhanden.\n"
+
+        # Berechne Statistiken
+        total_movements = len(self.movements)
+        movement_types = {}
+        product_movements = {}
+        total_inbound = 0  # Waren rein
+        total_outbound = 0  # Waren raus
+
+        for movement in self.movements:
+            # Zähle Bewegungstypen
+            movement_types[movement.movement_type] = (
+                movement_types.get(movement.movement_type, 0) + 1
+            )
+
+            # Zähle Bewegungen pro Produkt
+            if movement.product_id not in product_movements:
+                product_movements[movement.product_id] = {
+                    "name": movement.product_name,
+                    "count": 0,
+                    "total_quantity": 0,
+                }
+            product_movements[movement.product_id]["count"] += 1
+            product_movements[movement.product_id]["total_quantity"] += (
+                movement.quantity_change
+            )
+
+            # Berechne Ein-/Ausgang
+            if movement.quantity_change > 0:
+                total_inbound += movement.quantity_change
+            else:
+                total_outbound += abs(movement.quantity_change)
+
+        # Generiere Report
+        report = "=" * 80 + "\n"
+        report += "STATISTIKREPORT - LAGERBEWEGUNGEN\n"
+        report += "=" * 80 + "\n\n"
+
+        report += f"Gesamtzahl Bewegungen: {total_movements}\n"
+        report += f"Gesamt Waren eingegangen: {total_inbound} Einheiten\n"
+        report += f"Gesamt Waren ausgegeben: {total_outbound} Einheiten\n"
+        report += f"Netto-Bestandsveränderung: {total_inbound - total_outbound:+d} Einheiten\n\n"
+
+        report += "-" * 80 + "\n"
+        report += "BEWEGUNGSTYPEN:\n"
+        report += "-" * 80 + "\n"
+        for mov_type, count in sorted(movement_types.items()):
+            report += f"  {mov_type}: {count} Bewegungen\n"
+
+        report += "\n"
+        report += "-" * 80 + "\n"
+        report += "TOP PRODUKTE (nach Bewegungsanzahl):\n"
+        report += "-" * 80 + "\n"
+        sorted_products = sorted(
+            product_movements.items(),
+            key=lambda x: x[1]["count"],
+            reverse=True,
+        )
+        for product_id, data in sorted_products[:10]:  # Top 10
+            report += (
+                f"  {data['name']} (ID: {product_id})\n"
+                f"    Bewegungen: {data['count']}\n"
+                f"    Gesamtmenge: {data['total_quantity']:+d}\n\n"
+            )
+
+        report += "=" * 80 + "\n"
+        return report
