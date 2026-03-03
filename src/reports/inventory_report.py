@@ -35,11 +35,12 @@ class InventoryReport:
             value = product.get_total_value()
             total_value += value
 
-            if product.quantity < 10:
-                status = "!!! KNAPP !!!"
-                low_stock_count += 1
-            elif product.quantity == 0:
+            # zero should be reported as EMPTY first, then low stock
+            if product.quantity == 0:
                 status = "LEER"
+                low_stock_count += 1
+            elif product.quantity < 10:
+                status = "!!! KNAPP !!!"
                 low_stock_count += 1
             else:
                 status = "OK"
