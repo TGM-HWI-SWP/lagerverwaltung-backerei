@@ -85,8 +85,15 @@ class WarehouseMainWindow(QMainWindow):
         self.setWindowTitle("Lagerverwaltungssystem v0.1.0")
         self.setGeometry(100, 100, 1000, 600)
 
-        # Initialisiere Service
-        self.repository = RepositoryFactory.create_repository("memory")
+        # Repository auswählen (argumente "--repo" und "--db" können über sys.argv übergeben werden)
+        import argparse
+
+        parser = argparse.ArgumentParser(add_help=False)
+        parser.add_argument("--repo", choices=["memory", "sqlite"], default="memory")
+        parser.add_argument("--db", default="data.db")
+        args, _ = parser.parse_known_args()
+
+        self.repository = RepositoryFactory.create_repository(args.repo, db_path=args.db)
         self.service = WarehouseService(self.repository)
 
         # Erstelle UI
