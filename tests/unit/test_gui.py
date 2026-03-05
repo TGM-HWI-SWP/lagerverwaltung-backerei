@@ -327,3 +327,79 @@ class TestDialogs:
         dialog = StockDialog(product_name="Brot", mode="in")
         data = dialog.get_data()
         assert data["user"] == "system"
+
+
+# ── Statusleiste-Tests ───────────────────────────────────────────
+
+
+class TestStatusBar:
+    """Tests für die Statusleiste"""
+
+    def test_status_bar_exists(self, main_window):
+        """Statusleiste existiert"""
+        assert main_window.statusBar() is not None
+
+    def test_status_bar_empty_on_start(self, main_window):
+        """Statusleiste zeigt 0 Produkte bei Start"""
+        assert "0" in main_window.status_product_count.text()
+
+    def test_status_bar_updates_after_add(self, window_with_product):
+        """Statusleiste aktualisiert sich nach Produkthinzufügen"""
+        assert "1" in window_with_product.status_product_count.text()
+        assert "70.00" in window_with_product.status_total_value.text()
+
+    def test_status_bar_updates_after_delete(self, window_with_product):
+        """Statusleiste aktualisiert sich nach Löschen"""
+        window_with_product.service.delete_product("BRT-001")
+        window_with_product._refresh_products()
+        assert "0" in window_with_product.status_product_count.text()
+        assert "0.00" in window_with_product.status_total_value.text()
+
+
+# ── Farbcodierung-Tests ──────────────────────────────────────────
+
+
+class TestStockColorCoding:
+    """Tests für die Bestandsfarben"""
+
+    def test_green_for_sufficient_stock(self, window_with_product):
+        """Grün für ausreichenden Bestand (>15)"""
+        qty_item = window_with_product.products_table.item(0, 3)
+        bg = qty_item.background().color().name()
+        assert bg == "#27ae60"
+
+    def test_red_for_critical_stock(self, main_window):
+        """Rot für kritischen Bestand (<=5)"""
+        main_window.service.create_product(
+            "LOW-001", "Wenig Brot", "Fast leer", 2.0, "Brot", 3
+        )
+        main_window._refresh_products()
+        qty_item = main_window.products_table.item(0, 3)
+        bg = qty_item.background().color().name()
+        assert bg == "#e74c3c"
+
+    def test_orange_for_warning_stock(self, main_window):
+        """Orange für knappen Bestand (6-15)"""
+        main_window.service.create_product(
+            "MED-001", "Mittel Brot", "Knapp", 2.0, "Brot", 10
+        )
+        main_window._refresh_products()
+        qty_item = main_window.products_table.item(0, 3)
+        bg = qty_item.background().color().name()
+        assert bg == "#f39c12"
+
+
+# ── Export-Tests ─────────────────────────────────────────────────
+
+
+class TestExport:
+    """Tests für die Export-Funktion"""
+
+    def test_export_button_disabled_on_start(self, main_window):
+        """Export-Button ist initial deaktiviert"""
+        assert main_window.export_btn.isEnabled() is False
+
+    def test_export_button_enabled_after_report(self, window_with_product):
+        """Export-Button wird nach Berichtserstellung aktiviert"""
+        window_with_product._show_inventory_report()
+        assert window_with_product.export_btn.isEnabled() is True

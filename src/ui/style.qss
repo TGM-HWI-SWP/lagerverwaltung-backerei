@@ -1,0 +1,222 @@
+/* ── Lagerverwaltungssystem - Bäckerei Theme ─────────────────── */
+/* Warme Farben inspiriert von Bäckerei/Backwaren               */
+
+/* ── Globale Einstellungen ───────────────────────────────────── */
+QMainWindow {
+    background-color: #faf6f1;
+}
+
+QWidget {
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 13px;
+    color: #3b2f2f;
+}
+
+/* ── Tab-Widget ──────────────────────────────────────────────── */
+QTabWidget::pane {
+    border: 1px solid #d4c4b0;
+    border-radius: 4px;
+    background-color: #ffffff;
+    padding: 8px;
+}
+
+QTabBar::tab {
+    background-color: #e8ddd1;
+    color: #5a4a3a;
+    padding: 8px 20px;
+    margin-right: 2px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    border: 1px solid #d4c4b0;
+    border-bottom: none;
+    min-width: 120px;
+}
+
+QTabBar::tab:selected {
+    background-color: #ffffff;
+    color: #8b5e3c;
+    font-weight: bold;
+    border-bottom: 2px solid #8b5e3c;
+}
+
+QTabBar::tab:hover:!selected {
+    background-color: #f0e6d8;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────── */
+QPushButton {
+    background-color: #8b5e3c;
+    color: #ffffff;
+    border: none;
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+    min-height: 28px;
+}
+
+QPushButton:hover {
+    background-color: #a0714d;
+}
+
+QPushButton:pressed {
+    background-color: #6b4830;
+}
+
+QPushButton:disabled {
+    background-color: #c4b5a5;
+    color: #8a8078;
+}
+
+/* Delete-Button Spezialfarbe */
+QPushButton[objectName="delete_btn"] {
+    background-color: #c0392b;
+}
+
+QPushButton[objectName="delete_btn"]:hover {
+    background-color: #d44637;
+}
+
+/* Stock-In Button */
+QPushButton[objectName="stock_in_btn"] {
+    background-color: #27ae60;
+}
+
+QPushButton[objectName="stock_in_btn"]:hover {
+    background-color: #2ecc71;
+}
+
+/* Stock-Out Button */
+QPushButton[objectName="stock_out_btn"] {
+    background-color: #e67e22;
+}
+
+QPushButton[objectName="stock_out_btn"]:hover {
+    background-color: #f39c12;
+}
+
+/* ── Tabellen ────────────────────────────────────────────────── */
+QTableWidget {
+    background-color: #ffffff;
+    alternate-background-color: #faf6f1;
+    border: 1px solid #d4c4b0;
+    border-radius: 4px;
+    gridline-color: #e8ddd1;
+    selection-background-color: #d4a76a;
+    selection-color: #ffffff;
+}
+
+QTableWidget::item {
+    padding: 4px 8px;
+}
+
+QTableWidget::item:selected {
+    background-color: #d4a76a;
+    color: #ffffff;
+}
+
+QHeaderView::section {
+    background-color: #8b5e3c;
+    color: #ffffff;
+    padding: 6px 8px;
+    border: none;
+    border-right: 1px solid #a0714d;
+    font-weight: bold;
+}
+
+/* ── Eingabefelder ───────────────────────────────────────────── */
+QLineEdit, QSpinBox, QDoubleSpinBox {
+    border: 1px solid #d4c4b0;
+    border-radius: 4px;
+    padding: 6px 10px;
+    background-color: #ffffff;
+    min-height: 24px;
+}
+
+QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {
+    border: 2px solid #8b5e3c;
+}
+
+QLineEdit[readOnly="true"] {
+    background-color: #f0ebe4;
+    color: #8a8078;
+}
+
+/* ── Textfeld (Reports) ──────────────────────────────────────── */
+QTextEdit {
+    background-color: #2d2418;
+    color: #e8ddd1;
+    border: 1px solid #d4c4b0;
+    border-radius: 4px;
+    padding: 8px;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 12px;
+}
+
+/* ── Labels ──────────────────────────────────────────────────── */
+QLabel {
+    color: #3b2f2f;
+}
+
+/* ── Statusleiste ────────────────────────────────────────────── */
+QStatusBar {
+    background-color: #e8ddd1;
+    color: #5a4a3a;
+    border-top: 1px solid #d4c4b0;
+    padding: 4px;
+    font-size: 12px;
+}
+
+/* ── Scrollbars ──────────────────────────────────────────────── */
+QScrollBar:vertical {
+    background-color: #f0ebe4;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #c4b5a5;
+    border-radius: 6px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #8b5e3c;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    height: 0;
+}
+
+QScrollBar:horizontal {
+    background-color: #f0ebe4;
+    height: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #c4b5a5;
+    border-radius: 6px;
+    min-width: 30px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-color: #8b5e3c;
+}
+
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {
+    width: 0;
+}
+
+/* ── Dialoge ─────────────────────────────────────────────────── */
+QDialog {
+    background-color: #faf6f1;
+}
+
+QFormLayout {
+    margin: 12px;
+}
+
+/* ── MessageBox ──────────────────────────────────────────────── */
+QMessageBox {
+    background-color: #faf6f1;
+}

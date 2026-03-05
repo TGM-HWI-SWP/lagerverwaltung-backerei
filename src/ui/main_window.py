@@ -14,13 +14,20 @@ from PyQt6.QtWidgets import (
     QTabWidget,
     QTextEdit,
     QHeaderView,
+    QStatusBar,
+    QFileDialog,
 )
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QColor
 
 from ..adapters.repository import RepositoryFactory
 from ..adapters.report import ConsoleReportAdapter
 from ..services import WarehouseService
 from .dialogs import ProductDialogWindow, StockDialog
+
+# Schwellenwerte für Bestandsfarben
+STOCK_CRITICAL = 5
+STOCK_WARNING = 15
 
 
 class WarehouseMainWindow(QMainWindow):
@@ -38,6 +45,7 @@ class WarehouseMainWindow(QMainWindow):
 
         # Erstelle UI
         self._create_ui()
+        self._create_status_bar()
 
     def _create_ui(self):
         """Erstelle die Benutzeroberfläche"""
@@ -54,6 +62,25 @@ class WarehouseMainWindow(QMainWindow):
 
         main_layout.addWidget(self.tabs)
         central_widget.setLayout(main_layout)
+
+    def _create_status_bar(self):
+        """Statusleiste mit Lager-Statistiken"""
+        self.status_bar = QStatusBar()
+        self.setStatusBar(self.status_bar)
+        self.status_product_count = QLabel("Produkte: 0")
+        self.status_total_value = QLabel("Gesamtwert: 0.00 \u20ac")
+        self.status_bar.addPermanentWidget(self.status_product_count)
+        self.status_bar.addPermanentWidget(QLabel("  |  "))
+        self.status_bar.addPermanentWidget(self.status_total_value)
+        self._update_status_bar()
+
+    def _update_status_bar(self):
+        """Statusleiste aktualisieren"""
+        products = self.service.get_all_products()
+        count = len(products)
+        total = self.service.get_total_inventory_value()
+        self.status_product_count.setText(f"Produkte: {count}")
+        self.status_total_value.setText(f"Gesamtwert: {total:.2f} \u20ac")
 
     # ── Produkte-Tab ──────────────────────────────────────────────
 
@@ -75,11 +102,14 @@ class WarehouseMainWindow(QMainWindow):
         # Buttons
         button_layout = QHBoxLayout()
 
-        add_btn = QPushButton("Produkt hinzufügen")
+        add_btn = QPushButton("Produkt hinzuf\u00fcgen")
         edit_btn = QPushButton("Bearbeiten")
-        delete_btn = QPushButton("Löschen")
+        delete_btn = QPushButton("L\u00f6schen")
+        delete_btn.setObjectName("delete_btn")
         stock_in_btn = QPushButton("Einlagern")
+        stock_in_btn.setObjectName("stock_in_btn")
         stock_out_btn = QPushButton("Auslagern")
+        stock_out_btn.setObjectName("stock_out_btn")
         refresh_btn = QPushButton("Aktualisieren")
 
         add_btn.clicked.connect(self._add_product)
@@ -102,11 +132,12 @@ class WarehouseMainWindow(QMainWindow):
         self.products_table = QTableWidget()
         self.products_table.setColumnCount(6)
         self.products_table.setHorizontalHeaderLabels(
-            ["ID", "Name", "Kategorie", "Bestand", "Preis (€)", "Gesamtwert (€)"]
+            ["ID", "Name", "Kategorie", "Bestand", "Preis (\u20ac)", "Gesamtwert (\u20ac)"]
         )
         self.products_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.products_table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self.products_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.products_table.setAlternatingRowColors(True)
         self.products_table.horizontalHeader().setStretchLastSection(True)
         self.products_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Interactive
@@ -141,6 +172,7 @@ class WarehouseMainWindow(QMainWindow):
         )
         self.movements_table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self.movements_table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
+        self.movements_table.setAlternatingRowColors(True)
         self.movements_table.horizontalHeader().setStretchLastSection(True)
         self.movements_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Interactive
@@ -163,18 +195,22 @@ class WarehouseMainWindow(QMainWindow):
         button_layout = QHBoxLayout()
         inventory_btn = QPushButton("Lagerbestandsbericht")
         movement_btn = QPushButton("Bewegungsprotokoll")
+        self.export_btn = QPushButton("Als Datei exportieren")
+        self.export_btn.setEnabled(False)
 
         inventory_btn.clicked.connect(self._show_inventory_report)
         movement_btn.clicked.connect(self._show_movement_report)
+        self.export_btn.clicked.connect(self._export_report)
 
         button_layout.addWidget(inventory_btn)
         button_layout.addWidget(movement_btn)
+        button_layout.addStretch()
+        button_layout.addWidget(self.export_btn)
         layout.addLayout(button_layout)
 
         # Textfeld für Report-Ausgabe
         self.report_text = QTextEdit()
         self.report_text.setReadOnly(True)
-        self.report_text.setFontFamily("Courier New")
         self.report_text.setPlaceholderText(
             "Klicke auf einen der Buttons oben, um einen Bericht zu erstellen..."
         )
@@ -190,7 +226,7 @@ class WarehouseMainWindow(QMainWindow):
         selected = self.products_table.selectedItems()
         if not selected:
             QMessageBox.warning(
-                self, "Keine Auswahl", "Bitte wähle zuerst ein Produkt aus der Tabelle."
+                self, "Keine Auswahl", "Bitte w\u00e4hle zuerst ein Produkt aus der Tabelle."
             )
             return None
         row = selected[0].row()
@@ -212,7 +248,7 @@ class WarehouseMainWindow(QMainWindow):
                     category=data["category"],
                     initial_quantity=data["quantity"],
                 )
-                QMessageBox.information(self, "Erfolg", "Produkt erfolgreich hinzugefügt.")
+                QMessageBox.information(self, "Erfolg", "Produkt erfolgreich hinzugef\u00fcgt.")
                 self._refresh_products()
             except Exception as e:
                 QMessageBox.critical(self, "Fehler", str(e))
@@ -268,8 +304,8 @@ class WarehouseMainWindow(QMainWindow):
 
         reply = QMessageBox.question(
             self,
-            "Löschen bestätigen",
-            f"Soll das Produkt \"{name}\" (ID: {product_id}) wirklich gelöscht werden?",
+            "L\u00f6schen best\u00e4tigen",
+            f"Soll das Produkt \"{name}\" (ID: {product_id}) wirklich gel\u00f6scht werden?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No,
         )
@@ -277,7 +313,7 @@ class WarehouseMainWindow(QMainWindow):
         if reply == QMessageBox.StandardButton.Yes:
             try:
                 self.service.delete_product(product_id)
-                QMessageBox.information(self, "Erfolg", "Produkt erfolgreich gelöscht.")
+                QMessageBox.information(self, "Erfolg", "Produkt erfolgreich gel\u00f6scht.")
                 self._refresh_products()
             except Exception as e:
                 QMessageBox.critical(self, "Fehler", str(e))
@@ -318,7 +354,7 @@ class WarehouseMainWindow(QMainWindow):
                 QMessageBox.information(
                     self,
                     "Erfolg",
-                    f"Bestand erfolgreich {'erhöht' if mode == 'in' else 'verringert'}.",
+                    f"Bestand erfolgreich {'erh\u00f6ht' if mode == 'in' else 'verringert'}.",
                 )
                 self._refresh_products()
                 self._refresh_movements()
@@ -336,7 +372,21 @@ class WarehouseMainWindow(QMainWindow):
             self.products_table.setItem(row, 0, QTableWidgetItem(product_id))
             self.products_table.setItem(row, 1, QTableWidgetItem(product.name))
             self.products_table.setItem(row, 2, QTableWidgetItem(product.category))
-            self.products_table.setItem(row, 3, QTableWidgetItem(str(product.quantity)))
+
+            # Bestand mit Farbcodierung
+            qty_item = QTableWidgetItem(str(product.quantity))
+            qty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            if product.quantity <= STOCK_CRITICAL:
+                qty_item.setBackground(QColor("#e74c3c"))
+                qty_item.setForeground(QColor("#ffffff"))
+            elif product.quantity <= STOCK_WARNING:
+                qty_item.setBackground(QColor("#f39c12"))
+                qty_item.setForeground(QColor("#ffffff"))
+            else:
+                qty_item.setBackground(QColor("#27ae60"))
+                qty_item.setForeground(QColor("#ffffff"))
+            self.products_table.setItem(row, 3, qty_item)
+
             self.products_table.setItem(row, 4, QTableWidgetItem(f"{product.price:.2f}"))
             self.products_table.setItem(
                 row, 5, QTableWidgetItem(f"{product.get_total_value():.2f}")
@@ -346,6 +396,8 @@ class WarehouseMainWindow(QMainWindow):
         search_text = self.search_field.text()
         if search_text:
             self._filter_products(search_text)
+
+        self._update_status_bar()
 
     def _refresh_movements(self):
         """Lagerbewegungen-Tabelle aktualisieren"""
@@ -361,10 +413,20 @@ class WarehouseMainWindow(QMainWindow):
             self.movements_table.setItem(
                 row, 1, QTableWidgetItem(f"{movement.product_name} ({movement.product_id})")
             )
-            self.movements_table.setItem(row, 2, QTableWidgetItem(movement.movement_type))
-            self.movements_table.setItem(
-                row, 3, QTableWidgetItem(f"{movement.quantity_change:+d}")
-            )
+
+            # Bewegungstyp farblich markieren
+            type_item = QTableWidgetItem(movement.movement_type)
+            type_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            if movement.movement_type == "IN":
+                type_item.setForeground(QColor("#27ae60"))
+            elif movement.movement_type == "OUT":
+                type_item.setForeground(QColor("#c0392b"))
+            self.movements_table.setItem(row, 2, type_item)
+
+            qty_item = QTableWidgetItem(f"{movement.quantity_change:+d}")
+            qty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            self.movements_table.setItem(row, 3, qty_item)
+
             self.movements_table.setItem(
                 row, 4, QTableWidgetItem(movement.reason or "")
             )
@@ -395,6 +457,7 @@ class WarehouseMainWindow(QMainWindow):
         adapter = ConsoleReportAdapter(products=products)
         report = adapter.generate_inventory_report()
         self.report_text.setText(report)
+        self.export_btn.setEnabled(True)
 
     def _show_movement_report(self):
         """Bewegungsprotokoll generieren und anzeigen"""
@@ -402,3 +465,27 @@ class WarehouseMainWindow(QMainWindow):
         adapter = ConsoleReportAdapter(movements=movements)
         report = adapter.generate_movement_report()
         self.report_text.setText(report)
+        self.export_btn.setEnabled(True)
+
+    def _export_report(self):
+        """Aktuellen Bericht als Textdatei exportieren"""
+        content = self.report_text.toPlainText()
+        if not content:
+            QMessageBox.warning(self, "Kein Bericht", "Es gibt keinen Bericht zum Exportieren.")
+            return
+
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Bericht exportieren",
+            "bericht.txt",
+            "Textdateien (*.txt);;Alle Dateien (*)",
+        )
+        if file_path:
+            try:
+                with open(file_path, "w", encoding="utf-8") as f:
+                    f.write(content)
+                QMessageBox.information(
+                    self, "Erfolg", f"Bericht erfolgreich exportiert nach:\n{file_path}"
+                )
+            except Exception as e:
+                QMessageBox.critical(self, "Fehler", f"Export fehlgeschlagen: {e}")

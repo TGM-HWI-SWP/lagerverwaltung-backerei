@@ -37,6 +37,14 @@ Persönliches Changelog für Noah Bodner, Rolle: Rolle 4 - GUI & Interaktion
 - Echtzeit-Suchfilter (Name, ID, Kategorie, case-insensitive)
 - Lagerbewegungen-Tab mit echten Daten (neueste zuerst)
 - Responsive Tabellen mit dynamischer Spaltenbreite
+- Bäckerei-Theme (QSS-Stylesheet mit warmen Farben)
+- Bestandsfarben: Rot (kritisch <=5), Orange (knapp 6-15), Grün (>15)
+- Statusleiste mit Produktanzahl und Gesamtwert
+- Export-Funktion (Berichte als .txt speichern)
+- Farbige Bewegungstypen (IN=grün, OUT=rot)
+- Farbige Buttons (Löschen=rot, Einlagern=grün, Auslagern=orange)
+- contracts.md mit GUI-Schnittstellen erweitert
+- Manuelle Testcheckliste (docs/gui_testplan.md)
 
 ### Tests geschrieben
 - TestMainWindow (7 Tests): Fenster, Tabs, Tabellen, Suchfeld
@@ -45,10 +53,14 @@ Persönliches Changelog für Noah Bodner, Rolle: Rolle 4 - GUI & Interaktion
 - TestMovements (3 Tests): Leer, Nach Änderung, Sortierung
 - TestReports (4 Tests): Leer/Voll Inventar, Leer/Voll Bewegungen
 - TestDialogs (7 Tests): Add/Edit-Modus, Daten, StockDialog Modi
+- TestStatusBar (4 Tests): Existenz, Leer, Nach Add, Nach Delete
+- TestStockColorCoding (3 Tests): Grün, Orange, Rot
+- TestExport (2 Tests): Button deaktiviert/aktiviert
 
 ### Commits
 ```
 - feat(ui): implement complete GUI for Rolle 4
+- feat(ui): add styling, color coding, status bar, export, docs
 ```
 
 ### Mergekonflikt(e)
@@ -112,8 +124,8 @@ Persönliches Changelog für Noah Bodner, Rolle: Rolle 4 - GUI & Interaktion
 
 ## Zusammenfassung
 
-**Gesamt implementierte Features:** 9
-**Gesamt geschriebene Tests:** 30
+**Gesamt implementierte Features:** 17
+**Gesamt geschriebene Tests:** 39
 **Gesamt Commits:** [wird aktualisiert]
 **Größte Herausforderung:** Merge-Konflikt in services/__init__.py auflösen ohne Code von Rolle 2 zu verlieren
 **Schönste Code-Zeile:** `self.search_field.textChanged.connect(self._filter_products)`
