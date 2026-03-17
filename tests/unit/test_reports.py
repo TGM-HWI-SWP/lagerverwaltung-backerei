@@ -307,5 +307,4 @@ class TestReportIntegration:
         total_out = abs(sum(m.quantity_change for m in movements if m.quantity_change < 0))
 
         assert f"Gesamt Waren eingegangen: {total_in} Einheiten" in statistics_report
-        assert f"Gesamt Waren ausgegeben: {total_out} Einheiten" in statistics_report</content>
-<parameter name="filePath">c:\Users\szymo\github-classroom\TGM-HWI-SWP\lagerverwaltung-backerei\tests\unit\test_reports.py
+        assert f"Gesamt Waren ausgegeben: {total_out} Einheiten" in statistics_report
