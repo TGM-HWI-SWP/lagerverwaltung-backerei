@@ -140,3 +140,152 @@ class TestWarehouseService:
 
         movements = service.get_movements()
         assert len(movements) == 2
+
+
+class TestReportFixtures:
+    """Tests für die neuen Dummy-Daten Fixtures"""
+
+    def test_basic_products_fixture(self, basic_products):
+        """Test: basic_products Fixture funktioniert"""
+        assert len(basic_products) == 3
+        assert basic_products[0].id == "P001"
+        assert basic_products[0].name == "Laptop"
+        assert basic_products[0].price == 999.99
+
+    def test_movements_sample_fixture(self, movements_sample):
+        """Test: movements_sample Fixture funktioniert"""
+        assert len(movements_sample) == 5
+        total_in = sum(m.quantity_change for m in movements_sample if m.quantity_change > 0)
+        total_out = abs(sum(m.quantity_change for m in movements_sample if m.quantity_change < 0))
+        assert total_in == 85  # 10 + 50 + 25
+        assert total_out == 7  # 2 + 5
+
+    def test_service_with_movements_fixture(self, service_with_movements):
+        """Test: service_with_movements Fixture funktioniert"""
+        products = service_with_movements.get_all_products()
+        movements = service_with_movements.get_movements()
+
+        assert len(products) == 3
+        assert len(movements) == 5
+
+        # Teste Reports
+        inventory_report = service_with_movements.generate_inventory_report()
+        movement_report = service_with_movements.generate_movement_report()
+        statistics_report = service_with_movements.generate_statistics_report()
+
+        assert "LAGERBESTANDSBERICHT" in inventory_report
+        assert "BEWEGUNGSPROTOKOLL" in movement_report
+        assert "STATISTIKREPORT" in statistics_report
+
+
+class TestWarehouseServiceReports:
+    """Erweiterte Tests für WarehouseService Report-Methoden"""
+
+    def test_generate_reports_with_edge_case_products(self, repository_with_basic_products, edge_case_products):
+        """Test: Reports mit Edge-Case-Produkten"""
+        for product in edge_case_products:
+            repository_with_basic_products.save_product(product)
+
+        from src.services import WarehouseService
+        service = WarehouseService(repository_with_basic_products)
+
+        # Reports sollten keine Exceptions werfen
+        inventory_report = service.generate_inventory_report()
+        assert len(inventory_report) > 0
+        assert "Sehr teures Produkt" in inventory_report
+        assert "Unicode Produkt" in inventory_report
+
+    def test_movement_report_with_many_movements(self, repository_with_large_dataset):
+        """Test: Bewegungsprotokoll mit vielen Bewegungen"""
+        from src.services import WarehouseService
+        service = WarehouseService(repository_with_large_dataset)
+
+        import time
+        start_time = time.time()
+        report = service.generate_movement_report()
+        end_time = time.time()
+
+        # Sollte schnell sein (< 0.5 Sekunden für 500 Bewegungen)
+        assert end_time - start_time < 0.5
+        assert "Gesamtbewegungen: 500" in report
+
+    def test_statistics_report_with_many_movements(self, repository_with_large_dataset):
+        """Test: Statistikreport mit vielen Bewegungen"""
+        from src.services import WarehouseService
+        service = WarehouseService(repository_with_large_dataset)
+
+        report = service.generate_statistics_report()
+
+        # Prüfe dass alle Bewegungstypen erfasst werden
+        assert "IN:" in report
+        assert "OUT:" in report
+        assert "CORRECTION:" in report
+
+        # Prüfe dass Top-Produkte angezeigt werden
+        assert "TOP PRODUKTE" in report
+
+    def test_filter_methods_with_large_dataset(self, service_with_large_dataset):
+        """Test: Filter-Methoden mit großem Datensatz"""
+        # Teste Datumsfilter
+        from datetime import date
+        start_date = date(2024, 1, 1)
+        end_date = date(2024, 1, 2)
+        filtered = service_with_large_dataset.filter_movements_by_date(start_date, end_date)
+        assert len(filtered) == 500  # Alle Bewegungen sind an diesem Tag
+
+        # Teste Typ-Filter
+        in_movements = service_with_large_dataset.filter_movements_by_type("IN")
+        out_movements = service_with_large_dataset.filter_movements_by_type("OUT")
+        assert len(in_movements) > 0
+        assert len(out_movements) > 0
+        assert len(in_movements) + len(out_movements) <= 500  # Einige sind CORRECTION
+
+    def test_product_specific_movements_with_large_dataset(self, service_with_large_dataset):
+        """Test: Produkt-spezifische Bewegungen mit großem Datensatz"""
+        # Teste mit einem bekannten Produkt
+        product_movements = service_with_large_dataset.get_movements_for_product("P001")
+        assert len(product_movements) > 0
+
+        # Alle Bewegungen sollten das richtige Produkt haben
+        assert all(m.product_id == "P001" for m in product_movements)
+
+    def test_report_generation_with_unicode_and_special_chars(self, repository_with_basic_products):
+        """Test: Reports mit Unicode und Sonderzeichen"""
+        from src.domain.warehouse import Movement
+        from datetime import datetime
+
+        # Erstelle Bewegung mit vielen Sonderzeichen
+        special_movement = Movement(
+            id="special_test",
+            product_id="P001",
+            product_name="Tëst Prödüct 🚀 中文 αβγ",
+            quantity_change=42,
+            movement_type="IN",
+            reason="Tëst Rëäsön with spëciäl chärs: ñáéíóú @#$%^&*()",
+            timestamp=datetime(2024, 1, 1, 12, 0, 0),
+            performed_by="üsër_tëst_🚀"
+        )
+
+        repository_with_basic_products.save_movement(special_movement)
+
+        from src.services import WarehouseService
+        service = WarehouseService(repository_with_basic_products)
+
+        # Reports sollten keine Exceptions werfen
+        movement_report = service.generate_movement_report()
+        statistics_report = service.generate_statistics_report()
+
+        assert len(movement_report) > 0
+        assert len(statistics_report) > 0
+        assert "Tëst Prödüct" in movement_report
+
+    def test_empty_reports_with_products_but_no_movements(self, repository_with_basic_products):
+        """Test: Leere Reports bei Produkten ohne Bewegungen"""
+        from src.services import WarehouseService
+        service = WarehouseService(repository_with_basic_products)
+
+        movement_report = service.generate_movement_report()
+        statistics_report = service.generate_statistics_report()
+
+        assert "Keine Lagerbewegungen vorhanden" in movement_report
+        assert "Keine Lagerbewegungen für Statistik vorhanden" in statistics_report
