@@ -53,3 +53,8 @@ class ReportPort(ABC):
     def generate_movement_report(self) -> str:
         """Bewegungsprotokoll generieren"""
         pass
+
+    @abstractmethod
+    def generate_statistics_report(self) -> str:
+        """Statistikreport über Lagerbewegungen generieren"""
+        pass
