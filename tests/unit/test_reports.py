@@ -90,8 +90,8 @@ class TestStatisticsCalculations:
         assert "CORRECTION: 1 Bewegungen" in report
 
         # Prüfe Mengenberechnung
-        assert "Gesamt Waren eingegangen: 101 Einheiten" in report  # 100 + 5 - 3 - 1 = 101
-        assert "Gesamt Waren ausgegeben: 4 Einheiten" in report   # 20 + 3 = 23? Warte, lass mich neu berechnen
+        assert "Gesamt Waren eingegangen: 105 Einheiten" in report  # 100 + 5
+        assert "Gesamt Waren ausgegeben: 23 Einheiten" in report    # 20 + 3
 
     def test_statistics_with_large_dataset(self, repository_with_large_dataset):
         """Test: Statistik mit großem Datensatz"""
@@ -309,8 +309,8 @@ class TestReportIntegration:
         assert f"Gesamt Waren eingegangen: {total_in} Einheiten" in statistics_report
         assert f"Gesamt Waren ausgegeben: {total_out} Einheiten" in statistics_report
 
-        
-  """Unit tests für die Report‑Klassen"""
+
+    """Unit tests für die Report‑Klassen"""
 
 from src.domain.product import Product
 from src.domain.warehouse import Movement
