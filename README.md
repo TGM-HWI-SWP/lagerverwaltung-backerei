@@ -76,7 +76,17 @@ pip install -e ".[dev]"
 pytest
 
 # 5. GUI starten
-python -m src.ui
+#
+# Das Programm kann optional ein Repository angeben. verfügbar sind
+# - `memory` (Standard, flüchtig)
+# - `sqlite` mit zusätzlichem `--db <datei>` Pfad für die DB
+#
+# Auf Windows muss der Parameterblock getrennt werden:
+#   python -c "import src.ui; src.ui.main()" -- --repo sqlite --db lager.db
+# oder alternativ (nach Ergänzung von `if __name__=='__main__': main()`)
+#   python -m src.ui --repo sqlite --db lager.db
+
+python -c "import src.ui; src.ui.main()"  # normaler Start
 ```
 
 ## Architektur

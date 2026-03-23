@@ -121,6 +121,13 @@ class ReportPort(ABC):
 - **Ausgabe:** Formatierte Strings
 - **Verwendung:** Console, Logging, Dateiexport
 
+Neben der konkreten Adapter-Version existieren im Paket `src/reports`
+zwei reine Berichtsklassen (`InventoryReport`, `MovementReport`).
+Diese enthalten die eigentliche Erzeugungslogik und sind unabhängig von
+jedweder Ausgabe. Der `ConsoleReportAdapter` nutzt sie intern, daher
+bleibt der Berichtstestbar und kann später einfach durch andere
+Adapter ersetzt werden (z.B. CSV, PDF, GUI-Textfeld).
+
 ### 4. Services (`src/services/`)
 
 **Verantwortung:** Business-Use-Cases, Orchestrierung

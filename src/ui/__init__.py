@@ -5,6 +5,26 @@ from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
 
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QTableWidget,
+    QTableWidgetItem,
+    QLabel,
+    QSpinBox,
+    QLineEdit,
+    QMessageBox,
+    QTabWidget,
+    QDialog,
+    QFormLayout,
+    QDoubleSpinBox,
+)
+from PyQt6.QtCore import Qt
+
 from ..adapters.repository import RepositoryFactory
 from ..services import WarehouseService
 
@@ -64,11 +84,18 @@ class WarehouseMainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Lagerverwaltungssystem v0.4.0")
+        self.setWindowTitle("Lagerverwaltungssystem v0.1.0")
         self.setGeometry(100, 100, 1000, 600)
 
-        # Initialisiere Service
-        self.repository = RepositoryFactory.create_repository("memory")
+        # Repository auswählen (argumente "--repo" und "--db" können über sys.argv übergeben werden)
+        import argparse
+
+        parser = argparse.ArgumentParser(add_help=False)
+        parser.add_argument("--repo", choices=["memory", "sqlite"], default="memory")
+        parser.add_argument("--db", default="data.db")
+        args, _ = parser.parse_known_args()
+
+        self.repository = RepositoryFactory.create_repository(args.repo, db_path=args.db)
         self.service = WarehouseService(self.repository)
 
         # Erstelle UI
@@ -206,19 +233,51 @@ class WarehouseMainWindow(QMainWindow):
 
     def _delete_product(self):
         """Produkt löschen"""
-        QMessageBox.information(self, "Info", "Delete-Funktion wird implementiert")
+        row = self.products_table.currentRow()
+        if row < 0:
+            QMessageBox.warning(self, "Hinweis", "Bitte wählen Sie ein Produkt in der Tabelle aus.")
+            return
+        product_id_item = self.products_table.item(row, 0)
+        if not product_id_item:
+            return
+        product_id = product_id_item.text()
+        try:
+            self.service.delete_product(product_id)
+            QMessageBox.information(self, "Erfolg", f"Produkt {product_id} gelöscht.")
+            self._refresh_products()
+        except Exception as e:
+            QMessageBox.critical(self, "Fehler", str(e))
 
     def _show_inventory_report(self):
         """Lagerbestandsbericht anzeigen"""
-        QMessageBox.information(
-            self, "Lagerbestandsbericht", "Report-Funktion wird implementiert"
-        )
+        products = self.service.get_all_products()
+        movements = self.service.get_movements()
+        from ..adapters.report import ConsoleReportAdapter
+
+        adapter = ConsoleReportAdapter(products, movements)
+        report = adapter.generate_inventory_report()
+        # längeren Text in Scrollbox anzeigen
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Lagerbestandsbericht")
+        dlg.setText(report)
+        dlg.setIcon(QMessageBox.Information)
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.exec()
 
     def _show_movement_report(self):
         """Bewegungsprotokoll anzeigen"""
-        QMessageBox.information(
-            self, "Bewegungsprotokoll", "Report-Funktion wird implementiert"
-        )
+        products = self.service.get_all_products()
+        movements = self.service.get_movements()
+        from ..adapters.report import ConsoleReportAdapter
+
+        adapter = ConsoleReportAdapter(products, movements)
+        report = adapter.generate_movement_report()
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Bewegungsprotokoll")
+        dlg.setText(report)
+        dlg.setIcon(QMessageBox.Information)
+        dlg.setStandardButtons(QMessageBox.Ok)
+        dlg.exec()
 
 
 def main():
