@@ -1,438 +1,452 @@
 # Schnittstellen-Dokumentation (Contracts)
 
-## Übersicht
+**Version:** 0.2.0  
+**Verantwortlich:** Rolle 1 (Contract Owner)  
+**Letzte Aktualisierung:** 24. Februar 2026
 
-Diese Datei dokumentiert alle externen Schnittstellen des Projekts. Sie wird von Rolle 1 (Contract Owner) gepflegt und aktualisiert bei jeder Änderung.
+Diese Datei ist die **zentrale Spezifikation** aller Schnittstellen (Ports) im Projekt. Alle neuen Features müssen hier dokumentiert werden BEVOR sie implementiert werden!
 
 ---
 
 ## 1. RepositoryPort
 
-**Verantwortlich:** Rolle 2 (Businesslogik)
+**Verantwortlich:** Rolle 2  
+**Datei:** `src/ports/__init__.py`  
+**Implementierung:** `src/adapters/repository.py`
 
-### Beschreibung
-Abstrakte Schnittstelle für Datenpersistenz. Ermöglicht den Austausch zwischen verschiedenen Speicheradaptern (In-Memory, SQLite, JSON, etc.)
+### Zweck
+Abstrakte Schnittstelle für Datenpersistierung. Ermöglicht Austausch zwischen In-Memory, SQLite, JSON usw. ohne Service-Code zu ändern.
 
 ### Methoden
 
-#### `save_product(product: Product) -> None`
-Speichert ein Produkt.
+| Methode | Input | Output | Exceptions | v0.1 | v0.2 |
+|---------|-------|--------|------------|------|------|
+| `save_product(product)` | Product | None | ValueError | ✅ | ✅ |
+| `load_product(id)` | str | Product\|None | - | ✅ | ✅ |
+| `load_all_products()` | - | Dict[str,Product] | - | ✅ | ✅ |
+| `delete_product(id)` | str | None | - | ✅ | ✅ |
+| `save_movement(movement)` | Movement | None | ValueError | ✅ | ✅ |
+| `load_movements()` | - | List[Movement] | - | ✅ | ✅ |
 
-**Parameter:**
-- `product`: Product-Instanz
+**Beispiele:**
+```python
+# Produkt speichern
+product = Product(id="P001", name="Brot", price=2.99, ...)
+repository.save_product(product)
 
-**Exceptions:**
-- Keine
+# Produkt laden
+product = repository.load_product("P001")
+if product is None:
+    print("Nicht gefunden")
 
-**Implementierungen:**
-- `InMemoryRepository` (v0.1)
-
-#### `load_product(product_id: str) -> Optional[Product]`
-Lädt ein einzelnes Produkt.
-
-**Parameter:**
-- `product_id`: Eindeutige Produkt-ID
-
-**Return:**
-- `Product` oder `None` falls nicht gefunden
-
-**Implementierungen:**
-- `InMemoryRepository` (v0.1)
-
-#### `load_all_products() -> Dict[str, Product]`
-Lädt alle Produkte.
-
-**Return:**
-- Dictionary mit Product-IDs als Keys
-
-**Implementierungen:**
-- `InMemoryRepository` (v0.1)
-
-#### `delete_product(product_id: str) -> None`
-Löscht ein Produkt.
-
-**Parameter:**
-- `product_id`: Eindeutige Produkt-ID
-
-**Exceptions:**
-- Keine (ignoriert unbekannte IDs)
-
-**Implementierungen:**
-- `InMemoryRepository` (v0.1)
-
-#### `save_movement(movement: Movement) -> None`
-Speichert eine Lagerbewegung.
-
-**Parameter:**
-- `movement`: Movement-Instanz
-
-**Implementierungen:**
-- `InMemoryRepository` (v0.1)
-
-#### `load_movements() -> List[Movement]`
-Lädt alle Lagerbewegungen.
-
-**Return:**
-- Liste von Movement-Objekten
-
-**Implementierungen:**
-- `InMemoryRepository` (v0.1)
+# Alle Produkte
+all_products = repository.load_all_products()  # Dict[str, Product]
+```
 
 ---
 
 ## 2. ReportPort
 
-**Verantwortlich:** Rolle 3 (Reports & Qualität)
+**Verantwortlich:** Rolle 3  
+**Datei:** `src/ports/__init__.py`  
+**Implementierung:** `src/adapters/report.py`
 
-### Beschreibung
+### Zweck
 Abstrakte Schnittstelle für Report-Generierung.
 
 ### Methoden
 
-#### `generate_inventory_report() -> str`
-Generiert einen Lagerbestandsbericht.
+| Methode | Input | Output | v0.1 | v0.2 |
+|---------|-------|--------|------|------|
+| `generate_inventory_report()` | - | str | ✅ | ✅ |
+| `generate_movement_report()` | - | str | ✅ | ✅ |
 
-**Return:**
-- Formatierter String-Bericht
+**Beispiele:**
+```python
+# Lagerbestandsbericht
+report = report_adapter.generate_inventory_report()
+# Rückgabe: "Lagerbestandsbericht vom 24.02.2026..."
 
-**Implementierungen:**
-- `ConsoleReportAdapter` (v0.1)
-
-#### `generate_movement_report() -> str`
-Generiert ein Bewegungsprotokoll.
-
-**Return:**
-- Formatierter String-Bericht
-
-**Implementierungen:**
-- `ConsoleReportAdapter` (v0.1)
+# Bewegungsprotokoll
+report = report_adapter.generate_movement_report()
+# Rückgabe: "Bewegungsprotokoll vom 24.02.2026..."
+```
 
 ---
 
-## 3. GUIPort
+## 3. WarehouseService API
 
-**Verantwortlich:** Rolle 4 (GUI)
+**Verantwortlich:** Rolle 2  
+**Datei:** `src/services/warehouse_service.py`
 
-### Beschreibung
-Abstrakte Schnittstelle für die Benutzeroberfläche. Definiert Callbacks und Events, die von WarehouseService ausgelöst werden.
+### Zentrale Geschäftslogik für Lagerverwaltung
 
-### Methoden
+### Konstruktor
 
-#### `on_product_created(product: Product) -> None`
-Callback wenn Produkt erstellt wurde.
+```python
+def __init__(self, repository: RepositoryPort) -> None
+```
 
-**Parameter:**
-- `product`: Neue Product-Instanz
+**Beispiel:**
+```python
+repo = InMemoryRepository()
+service = WarehouseService(repo)
+```
 
-#### `on_product_deleted(product_id: str) -> None`
-Callback wenn Produkt gelöscht wurde.
+### Produkt-Verwaltung
 
-**Parameter:**
-- `product_id`: Gelöschte Produkt-ID
+#### `create_product(...)` → Product
+Erstellt und speichert ein neues Produkt.
 
-#### `on_product_updated(product: Product) -> None`
-Callback wenn Produkt aktualisiert wurde.
+```python
+def create_product(
+    self,
+    product_id: str,        # z.B. "PRD-001"
+    name: str,              # z.B. "Vollkornbrot"
+    description: str,       # z.B. "mit Saaten"
+    price: float,           # z.B. 2.99
+    category: str = "",     # z.B. "Brot"
+    initial_quantity: int = 0
+) -> Product
+```
 
-**Parameter:**
-- `product`: Aktualisierte Product-Instanz
-
-#### `on_movement_recorded(movement: Movement) -> None`
-Callback wenn Lagerbewegung aufgezeichnet wurde.
-
-**Parameter:**
-- `movement`: Neue Movement-Instanz
-
-#### `show_error(message: str, error_type: str) -> None`
-Zeigt Fehlermeldung in GUI an.
-
-**Parameter:**
-- `message: str` - Fehlermeldung
-- `error_type: str` - Fehlertyp ("ERROR", "WARNING", "INFO")
-
-#### `refresh_display() -> None`
-Aktualisiert die GUI-Ansicht.
-
----
-
-## 4. WarehouseService
-
-**Verantwortlich:** Rolle 2 (Businesslogik)
-
-### Beschreibung
-Service-Klasse für zentrale Lagerverwaltungslogik.
-
-### Methoden
-
-#### `create_product(...) -> Product`
-Erstellt ein neues Produkt.
-
-**Parameter:**
-- `product_id: str` - Eindeutige ID
-- `name: str` - Produktname
-- `description: str` - Beschreibung
-- `price: float` - Preis
-- `category: str` - Kategorie (optional)
-- `initial_quantity: int` - Anfangsbestand
-
-**Return:**
-- Neue Product-Instanz
+**Beispiel:**
+```python
+product = service.create_product(
+    product_id="PRD-001",
+    name="Vollkornbrot",
+    description="Frisches Vollkornbrot",
+    price=2.99,
+    category="Brot",
+    initial_quantity=50
+)
+# Rückgabe: Product(id="PRD-001", name="Vollkornbrot", ...)
+```
 
 **Exceptions:**
-- `ValueError`: Bei ungültigen Eingaben
+- `ValueError`: Wenn product_id leer oder price < 0
 
-#### `add_to_stock(product_id: str, quantity: int, reason: str, user: str) -> None`
-Erhöht den Bestand.
+#### `get_product(product_id)` → Product|None
+Ruft ein einzelnes Produkt ab.
 
-**Parameter:**
-- `product_id: str`
-- `quantity: int` - Menge
-- `reason: str` - Grund (optional)
-- `user: str` - Benutzer (default: "system")
+```python
+product = service.get_product("PRD-001")
+if product:
+    print(f"Bestand: {product.quantity}")
+```
+
+#### `get_all_products()` → Dict[str, Product]
+Ruft alle Produkte ab.
+
+```python
+all = service.get_all_products()
+for product_id, product in all.items():
+    print(f"{product_id}: {product.name} ({product.quantity} Stück)")
+```
+
+#### `delete_product(product_id)` → None
+Löscht ein Produkt. Ignoriert unbekannte IDs.
+
+```python
+service.delete_product("PRD-001")
+```
+
+### Bestandsverwaltung
+
+#### `add_to_stock(product_id, quantity, reason, user)` → None
+Erhöht den Bestand (Wareneingang).
+
+```python
+def add_to_stock(
+    self,
+    product_id: str,
+    quantity: int,          # positive Zahl
+    reason: str = "",       # z.B. "Lieferung"
+    user: str = "system"    # z.B. "maria"
+) -> None
+```
+
+**Beispiel:**
+```python
+service.add_to_stock(
+    product_id="PRD-001",
+    quantity=30,
+    reason="Lieferung",
+    user="maria"
+)
+# Speichert Movement(product_id="PRD-001", quantity_change=+30, type="IN", ...)
+```
 
 **Exceptions:**
 - `ValueError`: Wenn Produkt nicht existiert
 
-#### `remove_from_stock(product_id: str, quantity: int, reason: str, user: str) -> None`
-Verringert den Bestand.
+#### `remove_from_stock(product_id, quantity, reason, user)` → None
+Verringert den Bestand (Warenausgang).
 
-**Parameter:**
-- `product_id: str`
-- `quantity: int` - Menge
-- `reason: str` - Grund (optional)
-- `user: str` - Benutzer (default: "system")
+```python
+def remove_from_stock(
+    self,
+    product_id: str,
+    quantity: int,          # positive Zahl
+    reason: str = "",       # z.B. "Verkauf"
+    user: str = "system"
+) -> None
+```
+
+**Beispiel:**
+```python
+service.remove_from_stock(
+    product_id="PRD-001",
+    quantity=5,
+    reason="Verkauf",
+    user="kassensystem"
+)
+```
 
 **Exceptions:**
 - `ValueError`: Wenn Bestand unzureichend oder Produkt nicht existiert
 
-#### `get_product(product_id: str) -> Optional[Product]`
-Ruft ein einzelnes Produkt ab.
+### Reporting
 
-**Return:**
-- Product oder None
-
-#### `get_all_products() -> Dict[str, Product]`
-Ruft alle Produkte ab.
-
-**Return:**
-- Dictionary mit allen Produkten
-
-#### `get_movements() -> List[Movement]`
+#### `get_movements()` → List[Movement]
 Ruft alle Lagerbewegungen ab.
 
-**Return:**
-- Liste aller Movements
+```python
+movements = service.get_movements()
+for mov in movements:
+    print(f"{mov.timestamp}: {mov.product_name} {mov.quantity_change}")
+```
 
-#### `get_total_inventory_value() -> float`
+#### `get_total_inventory_value()` → float
 Berechnet den Gesamtwert des Lagers.
 
-**Return:**
-- Wert in Euro
-
----
-
-## 5. Exception Handling
-
-### Custom Exceptions
-
-#### `ProductNotFoundError`
-Wird geworfen wenn ein Produkt nicht existiert.
-
-**Trigger:**
-- `get_product(product_id)` mit ungültiger ID
-- `add_to_stock()` mit ungültiger Produkt-ID
-- `remove_from_stock()` mit ungültiger Produkt-ID
-- `delete_product()` mit ungültiger Produkt-ID
-
-#### `InsufficientStockError`
-Wird geworfen wenn Bestand zu gering ist.
-
-**Trigger:**
-- `remove_from_stock()` mit Menge > Bestand
-
-**Attribute:**
-- `product_id: str`
-- `requested: int`
-- `available: int`
-
-#### `InvalidProductDataError`
-Wird geworfen bei ungültigen Eingaben.
-
-**Trigger:**
-- `create_product()` mit leerem Namen
-- Negative Preise oder Mengen
-- Ungültiges SKU-Format
-
-**Attribute:**
-- `field: str` - Name des ungültigen Feldes
-- `value: str` - Ungültiger Wert
-
-#### `RepositoryError`
-Wird geworfen bei Persistierungs-Problemen.
-
-**Trigger:**
-- SQLite Datenbankfehler
-- JSON Datei nicht lesbar/schreibbar
-- Disk-Speicher voll
-
----
-
-## 6. Adapter Implementierungen
-
-### InMemoryRepository (v0.1)
-- Speichert Produkte & Movements in RAM
-- Daten gehen bei Neustart verloren
-- Für Tests & Prototyping
-
-### SQLiteRepository (v0.3 geplant)
-- Persistente Speicherung in SQLite
-- ACID-Garantien
-- Schnittstelle: Identisch zu RepositoryPort
-
-### JSONRepository (v0.3 geplant)
-- Speichert in JSON-Dateien
-- Human-readable Daten
-- Für einfache Setups ohne DB
-
-### ConsoleReportAdapter (v0.1)
-- Text-basierte Reports
-- Ausgabe auf Console/Terminal
-
-### FileReportAdapter (v0.3 geplant)
-- Speichert Reports als Dateien (CSV, PDF)
-- Exportfunktion für Geschäftseigentümer
-
----
-
-## 7. Report-Formate
-
-### Inventory Report Format
-```
-Lagerbestandsbericht vom: 2025-02-10 14:30:00
-==================================================
-Produkt-ID | Name              | Bestand | Wert
------------+-------------------+---------+--------
-PRD-001    | Brot Vollkorn     | 45      | 225,00€
-PRD-002    | Croissant         | 120     | 480,00€
-PRD-003    | Kuchen Schoko     | 12      | 144,00€
------------+-------------------+---------+--------
-GESAMT     |                   | 177     | 849,00€
-```
-
-**JSON-Alternative (für APIs):**
-```json
-{
-  "report_date": "2025-02-10T14:30:00",
-  "products": [
-    {"id": "PRD-001", "name": "Brot Vollkorn", "quantity": 45, "value": 225.00},
-    {"id": "PRD-002", "name": "Croissant", "quantity": 120, "value": 480.00}
-  ],
-  "total_quantity": 177,
-  "total_value": 849.00
-}
-```
-
-### Movement Report Format
-```
-Bewegungsprotokoll vom: 2025-02-01 bis 2025-02-10
-==================================================
-Zeit              | Produkt      | Typ    | Menge | Grund         | Nutzer
-------------------+--------------+--------+-------+---------------+---------
-2025-02-10 14:30 | Brot Vollk.  | IN     | +20   | Lieferung     | maria
-2025-02-10 13:15 | Croissant    | OUT    | -5    | Verkauf       | system
-2025-02-10 12:00 | Kuchen Scho. | CORR   | +2    | Bestandsprüf. | peter
-```
-
-**JSON-Alternative:**
-```json
-{
-  "report_period": {"start": "2025-02-01T00:00:00", "end": "2025-02-10T23:59:59"},
-  "movements": [
-    {"timestamp": "2025-02-10T14:30:00", "product_id": "PRD-001", "quantity_change": 20, "type": "IN", "reason": "Lieferung", "user": "maria"}
-  ]
-}
+```python
+total_value = service.get_total_inventory_value()
+print(f"Gesamtwert: {total_value:.2f}€")
 ```
 
 ---
 
-## 8. Validierungsregeln
+## 4. Domain Models
 
-### Product
-| Feld | Typ | Required | Validierung | Beispiel |
-|------|-----|----------|-------------|----------|
-| `id` | str | Ja | 3-20 Zeichen, nur alphanumerisch + `-` | "PRD-001" |
-| `name` | str | Ja | Min 3, Max 100 Zeichen | "Brot Vollkorn" |
-| `description` | str | Nein | Max 500 Zeichen | "Vollkornbrot mit Saaten" |
-| `price` | float | Ja | ≥ 0.01, Max 2 Dezimale | 3.50 |
-| `quantity` | int | Ja | ≥ 0 | 45 |
-| `sku` | str | Ja | 3-20 Zeichen, Format: `CATEGORY-NUMBER` | "BREAD-001" |
-| `category` | str | Ja | Aus vordefinierter Liste | "Brot", "Backware", "Kuchen" |
-| `notes` | str | Nein | Max 200 Zeichen | "Kühl lagern" |
+### Product (Dataclass)
 
-### Movement
-| Feld | Typ | Required | Validierung | Beispiel |
-|------|-----|----------|-------------|----------|
-| `id` | str | Ja (Auto) | UUID oder Sequence | "MOV-20250210-001" |
-| `product_id` | str | Ja | Muss existierendes Produkt sein | "PRD-001" |
-| `quantity_change` | int | Ja | ≠ 0, Min -1000, Max +1000 | 20 oder -5 |
-| `movement_type` | str | Ja | Enum: "IN", "OUT", "CORRECTION" | "IN" |
-| `reason` | str | Nein | Max 200 Zeichen | "Lieferung", "Verkauf" |
-| `performed_by` | str | Ja | Min 3, Max 50 Zeichen | "maria" |
+**Datei:** `src/domain/product.py`
 
-### Kategorien (vordefiniert)
-- Brot
-- Backware
-- Kuchen
-- Süßes
-- Sonstiges
+```python
+@dataclass
+class Product:
+    id: str                                    # Eindeutige ID
+    name: str                                  # Produktname
+    description: str                           # Beschreibung
+    price: float                               # Preis pro Einheit
+    quantity: int = 0                          # Aktueller Bestand
+    sku: str = ""                              # Lagerhaltungscode
+    category: str = ""                         # Kategorie
+    created_at: datetime = field(default_factory=datetime.now)
+    updated_at: datetime = field(default_factory=datetime.now)
+    notes: Optional[str] = None               # Notizen
+```
 
----
+**Wichtige Methoden:**
 
-## 9. Domain Models
+```python
+def update_quantity(self, amount: int) -> None:
+    """Bestand ändern (positiv = hinzufügen, negativ = entfernen)"""
+    new_quantity = self.quantity + amount
+    if new_quantity < 0:
+        raise ValueError(f"Ungültige Menge: {new_quantity}")
+    self.quantity = new_quantity
+    self.updated_at = datetime.now()
 
-### Product
+def get_total_value(self) -> float:
+    """Lagerwert berechnen: Preis × Bestand"""
+    return self.price * self.quantity
+```
 
-**Attribute:**
-- `id: str` - Eindeutige ID
-- `name: str` - Produktname
-- `description: str` - Beschreibung
-- `price: float` - Preis pro Einheit
-- `quantity: int` - Bestand
-- `sku: str` - Stock Keeping Unit
-- `category: str` - Kategorie
-- `created_at: datetime` - Erstellungsdatum
-- `updated_at: datetime` - Änderungsdatum
-- `notes: str` - Anmerkungen
+**Validierung:**
+- `id`: Nicht leer
+- `price`: >= 0
+- `quantity`: >= 0
 
-**Methoden:**
-- `update_quantity(amount: int) -> None` - Bestand ändern
-- `get_total_value() -> float` - Gesamtwert berechnen
+### Movement (Dataclass)
 
-### Movement
+**Datei:** `src/domain/warehouse.py`
 
-**Attribute:**
-- `id: str` - Eindeutige Bewegungs-ID
-- `product_id: str` - Verweis auf Produkt
-- `product_name: str` - Name des Produkts
-- `quantity_change: int` - Mengenänderung (+/-)
-- `movement_type: str` - "IN", "OUT", "CORRECTION"
-- `reason: str` - Grund (optional)
-- `timestamp: datetime` - Zeitstempel
-- `performed_by: str` - Benutzer
+```python
+@dataclass
+class Movement:
+    id: str                                    # Eindeutige ID
+    product_id: str                            # Referenz zu Product
+    product_name: str                          # Name (Snapshot)
+    quantity_change: int                       # Menge (+/-)
+    movement_type: str                         # "IN" oder "OUT"
+    reason: str = ""                           # Grund
+    performed_by: str = "system"              # Nutzer/System
+    timestamp: datetime = field(default_factory=datetime.now)
+```
 
----
+### Warehouse (Klasse)
 
-## Versionshistorie der Contracts
-
-### v0.1 (2025-01-20)
-- RepositoryPort: Grundlegende CRUD-Operationen
-- ReportPort: Basis-Report-Generierung
-- WarehouseService: Kern-Use-Cases
-- Product: Basis-Domain-Model
-- Movement: Lagerbewegungen-Protokoll
+```python
+class Warehouse:
+    id: str                    # Lager-ID
+    products: Dict[str, Product]
+    created_at: datetime
+```
 
 ---
 
-## Zukünftige Änderungen
+## 5. Ordnerstruktur
+
+```
+src/
+├── domain/                    # Business Entities
+│   ├── __init__.py
+│   ├── product.py            # Product Dataclass
+│   └── warehouse.py          # Warehouse, Movement Dataclass
+│
+├── ports/                     # Abstrakte Schnittstellen
+│   └── __init__.py           # RepositoryPort, ReportPort
+│
+├── adapters/                  # Konkrete Implementierungen
+│   ├── __init__.py
+│   ├── repository.py         # InMemoryRepository, RepositoryFactory
+│   └── report.py             # ConsoleReportAdapter
+│
+├── services/                  # Business Logic
+│   ├── __init__.py           # Nur: from .warehouse_service import ...
+│   └── warehouse_service.py  # WarehouseService Klasse
+│
+├── ui/                        # Benutzeroberfläche (PyQt6)
+│   ├── __init__.py           # main() Funktion
+│   ├── main_window.py        # WarehouseMainWindow Klasse
+│   └── dialogs.py            # ProductDialogWindow Klasse
+│
+├── reports/                   # Report-Templates (zukünftig)
+│   └── __init__.py
+│
+└── __init__.py
+```
+
+---
+
+## 6. Import-Muster
+
+**Richtig:**
+```python
+# In main_window.py
+from ..services import WarehouseService
+from ..adapters.repository import RepositoryFactory
+
+# In warehouse_service.py
+from ..domain.product import Product
+from ..ports import RepositoryPort
+```
+
+**Falsch:**
+```python
+# ❌ Keine Imports aus __init__.py wenn dort nur die Klasse liegt
+from ..services.warehouse_service import WarehouseService  # NEIN!
+
+# ✅ Statt dessen:
+from ..services import WarehouseService  # JA!
+```
+
+---
+
+## 7. Fehlerbehandlung
+
+### Exception-Typen
+
+```python
+# Grundprinzip: Nutze ValueError für ungültige Eingaben
+# Nutze beschreibende Fehlermeldungen
+
+raise ValueError("Bestand reicht nicht aus. Verfügbar: 5, Angefordert: 10")
+raise ValueError("Produkt PRD-001 nicht gefunden")
+raise ValueError("Product ID kann nicht leer sein")
+```
+
+### Fehler-Best-Practices
+
+```python
+# ✅ GUT
+try:
+    service.add_to_stock("PRD-001", 10, "Lieferung", "maria")
+except ValueError as e:
+    print(f"Fehler: {e}")
+
+# ❌ SCHLECHT
+try:
+    service.add_to_stock("PRD-001", 10)
+except:
+    pass  # Fehler ignorieren!
+```
+
+---
+
+## 8. Test-Integration
+
+Alle Services MÜSSEN mit `InMemoryRepository` testbar sein:
+
+```python
+# test_warehouse_service.py
+def test_create_product():
+    repo = InMemoryRepository()
+    service = WarehouseService(repo)
+    
+    product = service.create_product(
+        product_id="TEST-001",
+        name="Testprodukt",
+        description="Für Tests",
+        price=10.0
+    )
+    
+    assert product.id == "TEST-001"
+    assert service.get_product("TEST-001") is not None
+```
+
+---
+
+## 9. Version-Matrix
+
+| Feature | v0.1 | v0.2 | v0.3 | v0.4 |
+|---------|------|------|------|------|
+| Create/Read/Delete Produkt | ✅ | ✅ | ✅ | ✅ |
+| Add/Remove Stock | ✅ | ✅ | ✅ | ✅ |
+| In-Memory Repository | ✅ | ✅ | ✅ | ✅ |
+| Movement-Logging | ✅ | ✅ | ✅ | ✅ |
+| Basic Reports | ✅ | ✅ | ✅ | ✅ |
+| **PyQt6 UI** | ⚠️ | ✅ | ✅ | ✅ |
+| **SQLite Repository** | - | - | ✅ | ✅ |
+| **Product Kategorien** | - | ✅ | ✅ | ✅ |
+| **Advanced Reports** | - | - | ✅ | ✅ |
+
+---
+
+## 10. Änderungen dokumentieren
+
+### Neue Methode hinzufügen
+
+1. **Hier eintragen** in contracts.md
+2. Tabelle + Beispiel
+3. Code schreiben
+4. Tests schreiben
+5. Commit: `docs(contracts): neue Methode X hinzugefügt`
+
+### Breaking Change (z.B. Parameter hinzufügen)
+
+1. ⚠️ **Mit Team abstimmen!**
+2. Alte Methode markieren als deprecated
+3. Neue Methode erstellen
+4. Mindestens eine Version überlappen lassen
+5. In CHANGELOG.md dokumentieren
+
+---
+
+**Status:** v0.2.0 stabil  
+**Nächste Review:** Vor v0.3 Release
 
 - [ ] SQLite-Adapter implementieren
 - [ ] GraphML-Report-Generierung
