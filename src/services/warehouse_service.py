@@ -105,5 +105,9 @@ class WarehouseService:
 
     def delete_product(self, product_id: str) -> None:
         """Löscht ein Produkt"""
+        product = self.repository.load_product(product_id)
+        if not product:
+            raise ValueError(f"Produkt {product_id} nicht gefunden")
         self.repository.delete_product(product_id)
-        self.warehouse.remove_product(product_id)
+        if product_id in self.warehouse.products:
+            del self.warehouse.products[product_id]

@@ -445,11 +445,65 @@ def test_create_product():
 
 ---
 
-**Status:** v0.2.0 stabil  
-**Nächste Review:** Vor v0.3 Release
+---
+
+## 10. GUI-Schnittstellen (Rolle 4)
+
+**Verantwortlich:** Rolle 4
+**Dateien:** `src/ui/main_window.py`, `src/ui/dialogs.py`
+
+### WarehouseMainWindow
+
+Hauptfenster mit 3 Tabs und Statusleiste.
+
+| Methode | Beschreibung | Trigger |
+|---------|-------------|---------|
+| `_add_product()` | Öffnet ProductDialogWindow, ruft `service.create_product()` | Button "Produkt hinzufügen" |
+| `_edit_product()` | Öffnet ProductDialogWindow im Edit-Modus | Button "Bearbeiten" |
+| `_delete_product()` | Bestätigungsdialog, ruft `service.delete_product()` | Button "Löschen" |
+| `_stock_in()` | Öffnet StockDialog, ruft `service.add_to_stock()` | Button "Einlagern" |
+| `_stock_out()` | Öffnet StockDialog, ruft `service.remove_from_stock()` | Button "Auslagern" |
+| `_refresh_products()` | Aktualisiert Produkttabelle + Statusleiste | Button "Aktualisieren" / nach Änderungen |
+| `_refresh_movements()` | Aktualisiert Bewegungstabelle (neueste zuerst) | Button / nach Ein-/Auslagern |
+| `_filter_products(text)` | Filtert Tabelle nach Name/ID/Kategorie | Suchfeld-Eingabe |
+| `_show_inventory_report()` | Generiert Bericht via ConsoleReportAdapter | Button "Lagerbestandsbericht" |
+| `_show_movement_report()` | Generiert Bericht via ConsoleReportAdapter | Button "Bewegungsprotokoll" |
+| `_export_report()` | Speichert Bericht als .txt (QFileDialog) | Button "Als Datei exportieren" |
+
+### Bestandsfarben (Produkttabelle, Spalte "Bestand")
+
+| Bestand | Farbe | Konstante |
+|---------|-------|-----------|
+| <= 5 | Rot (#e74c3c) | `STOCK_CRITICAL` |
+| 6-15 | Orange (#f39c12) | `STOCK_WARNING` |
+| > 15 | Grün (#27ae60) | - |
+
+### ProductDialogWindow
+
+| Parameter | Typ | Beschreibung |
+|-----------|-----|-------------|
+| `parent` | QWidget | Elternfenster |
+| `product_data` | dict\|None | None = Hinzufügen-Modus, dict = Bearbeiten-Modus |
+
+**Rückgabe `get_data()`:** `{"product_id", "name", "description", "price", "quantity", "category"}`
+
+### StockDialog
+
+| Parameter | Typ | Beschreibung |
+|-----------|-----|-------------|
+| `parent` | QWidget | Elternfenster |
+| `product_name` | str | Angezeigter Produktname |
+| `mode` | str | `"in"` = Einlagern, `"out"` = Auslagern |
+
+**Rückgabe `get_data()`:** `{"quantity", "reason", "user"}`
+
+---
+
+**Status:** v0.3.0 stabil
+**Nächste Review:** Vor v0.4 Release
 
 - [ ] SQLite-Adapter implementieren
+- [ ] Report B (Rolle 3) in GUI einbinden
 - [ ] GraphML-Report-Generierung
 - [ ] Benutzer-Management erweitern
 - [ ] Batch-Operationen unterstützen
-- [ ] Benutzer-Management erweitern
