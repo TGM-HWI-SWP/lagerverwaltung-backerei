@@ -21,12 +21,16 @@ class ConsoleReportAdapter(ReportPort):
         Bewegungsprotokoll als Text generieren.
         Sortiert Bewegungen chronologisch.
         """
-        if not self.movements:
-            return "Keine Lagerbewegungen vorhanden.\n"
-
         report = "=" * 85 + "\n"
         report += "BEWEGUNGSPROTOKOLL\n"
         report += "=" * 85 + "\n\n"
+
+        if not self.movements:
+            report += "Keine Lagerbewegungen vorhanden.\n\n"
+            report += "=" * 85 + "\n"
+            report += f"Gesamtbewegungen: 0\n"
+            report += "=" * 85 + "\n"
+            return report
         
         report += f"{'Zeitpunkt':<20} | {'Produkt':<20} | {'Typ':<10} | {'Änderung':<10} | {'User':<15}\n"
         report += "-" * 85 + "\n"
@@ -92,6 +96,10 @@ class ConsoleReportAdapter(ReportPort):
         report = "=" * 80 + "\n"
         report += "STATISTIKREPORT - LAGERBEWEGUNGEN\n"
         report += "=" * 80 + "\n\n"
+        # Liste der in den Bewegungen auftauchenden Produktnamen (für bessere Lesbarkeit)
+        unique_product_names = sorted({m.product_name for m in self.movements if m.product_name})
+        if unique_product_names:
+            report += "Produkte in Statistik: " + ", ".join(unique_product_names) + "\n\n"
 
         report += f"Gesamtzahl Bewegungen: {total_movements}\n"
         report += f"Gesamt Waren eingegangen: {total_inbound} Einheiten\n"

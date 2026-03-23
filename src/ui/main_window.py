@@ -402,8 +402,13 @@ class WarehouseMainWindow(QMainWindow):
     def _refresh_movements(self):
         """Lagerbewegungen-Tabelle aktualisieren"""
         movements = self.service.get_movements()
-        # Neueste zuerst
-        movements_sorted = sorted(movements, key=lambda m: m.timestamp, reverse=True)
+        # Neueste zuerst (bei gleichen Timestamps OUT priorisieren)
+        # Sortiere nach Zeitstempel absteigend; bei gleichen Zeitstempeln OUT zuerst
+        movements_sorted = sorted(
+            movements,
+            key=lambda m: (m.timestamp, 1 if m.movement_type == "OUT" else 0),
+            reverse=True,
+        )
         self.movements_table.setRowCount(len(movements_sorted))
 
         for row, movement in enumerate(movements_sorted):

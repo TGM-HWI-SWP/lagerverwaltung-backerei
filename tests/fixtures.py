@@ -303,3 +303,15 @@ def mixed_movement_types():
             performed_by="user2",
         ),
     ]
+
+
+@pytest.fixture
+def service_with_large_dataset(repository_with_large_dataset):
+    """WarehouseService für den großen Datensatz"""
+    return WarehouseService(repository_with_large_dataset)
+
+
+@pytest.fixture
+def service(empty_repository):
+    """Allgemeiner WarehouseService mit leerem Repository"""
+    return WarehouseService(empty_repository)
