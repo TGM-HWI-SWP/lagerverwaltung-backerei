@@ -10,7 +10,7 @@ Dieses Dokument beschreibt die Test-Strategie und Test-Struktur des Projekts.
 
 **Ziel:** Einzelne Komponenten isoliert testen (ohne externe Abhängigkeiten)
 
-**Speicherort:** `tests/unit/test_domain.py`
+**Speicherort:** `tests/unit/` (`test_domain.py`, `test_reports.py`, `test_warehouse_service.py`)
 
 #### TestProduct
 Testet die `Product`-Domänenklasse:

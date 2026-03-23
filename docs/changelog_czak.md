@@ -44,43 +44,79 @@ noch keine
 
 ---
 
-## [v0.4] - 24.02.2026
+## [v0.4] – 24.02.2026
 
 ### Implementiert
-- **Inventur-Logik:** `adjust_stock_inventory` erstellt, um Bestandsdifferenzen automatisch zu berechnen und als ADJUST-Bewegung zu loggen.
-- **Preisanpassungs-Feature:** `update_category_prices` implementiert für prozentuale Massen-Updates von Produktpreisen innerhalb einer Kategorie.
-- **Reporting (Report A):** `ConsoleReportAdapter` grundlegend überarbeitet: Tabellarische Darstellung, Status-Indikatoren (OK/KNAPP/LEER) und Zusammenfassung kritischer Bestände.
-- **Validierung:** Sicherheits-Checks in `create_product` für Preise (nicht negativ), Namen (Mindestlänge) und Bestände hinzugefügt.
+- ✅ Reports modularisiert: `InventoryReport` und `MovementReport` als
+  eigenständige Logik‑Klassen unter `src/reports`
+- ✅ `ConsoleReportAdapter` delegiert an die neuen Report‑Klassen,
+  doppelte Code‑Logik entfernt
+- ✅ GUI erweitert
+  - Produkt löschen implementiert
+  - Anzeige von Lager‑ und Bewegungsberichten per `QMessageBox`
+  - README um Startanweisung für GUI ergänzt
+- ✅ Business‑Service: neuer Testfall `update_category_prices`
+- ✅ Unit‑Tests für Report‑Klassen hinzugefügt
+- ✅ Integrationstest verschärft (strenge Assertions, direkte
+  Nutzung der Report‑Klassen)
+- ✅ Dokumentation aktualisiert:
+  - `docs/architecture.md` um Hinweis auf reine Report‑Klassen ergänzt
+  - `docs/contracts.md` um Beschreibung/Versionen der Report‑Komponenten
+  - `docs/tests.md` um `test_reports.py` und Testpfade erweitert
+  - `README.md` ergänzt (GUI, Reports, …)
+- ✅ Versionsangaben und Hinweise in den Docs aktualisiert
+- ✅ Versionsnummer in `src/__init__.py` bestätigt
 
 ### Tests geschrieben
-- `tests/unit/test_warehouse_service.py`: Unit-Tests für Inventur-Abgleich, Mindestbestand-Erkennung und Produktlöschung.
-- `test_report_warning_indicator`: Integrationstest für die korrekte Anzeige von Warnungen im Report A.
-
-### Mergekonflikt(e)
-- Keine
+- `tests/unit/test_reports.py` (Leerer/inhaltlich korrekter Lager‑ &
+  Bewegungsbericht)
+- Erweiterung von `tests/unit/test_warehouse_service.py`
+  um `test_update_category_prices`
+- Integrationstest angepasst (`tests/integration/test_integration.py`)
 
 ### Commits
-feat(service/repo): implement business logic sprint 1 (week 4)
+- `feat: add modular report classes and adapter delegation`
+- `test: add report unit tests and extend warehouse service tests`
+- `ui: implement delete button and report dialogs`
+- `docs: update architecture, contracts, tests, README`
+- `chore: bump version, update changelog`
 
-test(unit): add comprehensive unit tests for WarehouseService
+### Mergekonflikt(e)
+- Konflikte zwischen Branches `develop` und `rolle2` in `services` und
+  `contracts` gelöst
+
+---
+
+**Changelog erstellt von:** Przemyslaw (Rolle 2)  
+**Letzte Aktualisierung:** 24.02.2026  
 
 
-
-## [v0.5] - [Datum]
+## [v0.5] - 03.03.2026
 
 ### Implementiert
-- [Feature/Fix]
+- Abschluss von Report A: `InventoryReport` komplett, Statuslogik korrigiert
+- `MovementReport` Ausgabe verbessert (Header, ID einfügen, 0‑Bewegungen)
+- Refactoring des `ConsoleReportAdapter` zur Nutzung beider Reportklassen
+- GUI: Dialoge zeigen Berichte an; Produktlöschung funktional
+- Tests ergänzt und bestehende Fehler behoben
+- Integrationstest und Berechnungsassertionen korrigiert
+- Dokumentation an mehreren Stellen ergänzt (siehe v0.4 Eintrag)
 
 ### Tests geschrieben
-- [Tests]
+- Unit‑Tests für beide Reportklassen
+- Erweiterter `WarehouseService`‑Test (Kategoriepreise)
+- Zusätzliche Assertions in Integrationstest
 
 ### Commits
 ```
-- [Commits]
+- feat(rolle2): modular reports & GUI enhancements
+- test: add report unit tests and extend warehouse service tests
+- docs: update architecture, contracts, tests, README
+- chore: bump version, update changelog
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- keine (Konflikte in vorigen Versionen gelöst)
 
 ---
 
@@ -112,5 +148,5 @@ test(unit): add comprehensive unit tests for WarehouseService
 
 ---
 
-**Changelog erstellt von:** [Name]  
-**Letzte Aktualisierung:** [Datum]
+**Changelog erstellt von:** Przemyslaw Czak  
+**Letzte Aktualisierung:** 03.03.2026

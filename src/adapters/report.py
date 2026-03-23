@@ -2,6 +2,7 @@
 
 from typing import Dict, List
 from ..ports import ReportPort
+from ..reports import InventoryReport, MovementReport
 
 
 class ConsoleReportAdapter(ReportPort):
@@ -12,50 +13,8 @@ class ConsoleReportAdapter(ReportPort):
         self.movements = movements or []
 
     def generate_inventory_report(self) -> str:
-        """
-        Lagerbestandsbericht (Report A) mit Warnsystem für Woche 4.
-        Markiert Produkte mit geringem Bestand (< 10 Stück) automatisch.
-        """
-        if not self.products:
-            return "Lager ist leer.\n"
-
-        report = "=" * 70 + "\n"
-        report += "LAGERBESTANDSBERICHT (BÄCKEREI-VERWALTUNG)\n"
-        report += "=" * 70 + "\n\n"
-        
-        # Header für die Tabelle
-        report += f"{'ID':<10} | {'Name':<20} | {'Bestand':<8} | {'Status':<15}\n"
-        report += "-" * 70 + "\n"
-
-        total_value = 0
-        low_stock_count = 0
-
-        for product_id, product in self.products.items():
-            value = product.get_total_value()
-            total_value += value
-            
-            # Warn-Logik für Woche 4
-            if product.quantity < 10:
-                status = "!!! KNAPP !!!"
-                low_stock_count += 1
-            elif product.quantity == 0:
-                status = "LEER"
-                low_stock_count += 1
-            else:
-                status = "OK"
-
-            # Zeile 1: Basisdaten
-            report += f"{product_id:<10} | {product.name:<20} | {product.quantity:<8} | {status:<15}\n"
-            # Zeile 2: Details (leicht eingerückt)
-            report += f"           > Kategorie: {product.category:<12} | Preis: {product.price:>6.2f} € | Wert: {value:>7.2f} €\n"
-            report += " " * 70 + "\n"
-
-        report += "-" * 70 + "\n"
-        report += f"Gesamtwert Lager:    {total_value:>10.2f} €\n"
-        report += f"Kritische Bestände:  {low_stock_count:>10} Artikel\n"
-        report += "=" * 70 + "\n"
-
-        return report
+        """Erstellt einen Lagerbestandsbericht über die reine Report-Klasse."""
+        return InventoryReport(self.products).generate()
 
     def generate_movement_report(self) -> str:
         """

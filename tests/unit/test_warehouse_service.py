@@ -64,3 +64,19 @@ class TestWarehouseServiceWoche4:
         
         with pytest.raises(ValueError, match="Unzureichender Bestand"):
             service.remove_from_stock("B-002", 10)
+
+    def test_update_category_prices(self, service):
+        """Preisanpassung für eine Kategorie"""
+        service.create_product("C1", "Artikel 1", "", 10.0, category="food")
+        service.create_product("C2", "Artikel 2", "", 20.0, category="tool")
+        service.create_product("C3", "Artikel 3", "", 5.0, category="food")
+
+        service.update_category_prices("food", 0.10)
+        p1 = service.get_product("C1")
+        p3 = service.get_product("C3")
+
+        assert p1.price == pytest.approx(11.0)
+        assert p3.price == pytest.approx(5.5)
+        # Artikel aus anderer Kategorie darf sich nicht ändern
+        p2 = service.get_product("C2")
+        assert p2.price == 20.0

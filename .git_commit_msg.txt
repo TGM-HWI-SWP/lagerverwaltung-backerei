@@ -1,0 +1,10 @@
+﻿feat(rolle2): modular reports & GUI enhancements
+
+- add InventoryReport and MovementReport classes
+- refactor ConsoleReportAdapter to delegate to report classes
+- implement product deletion and report dialogs in UI
+- add unit tests for reports
+- extend warehouse service tests (category price update)
+- tighten integration tests & add direct report class checks
+- update docs (architecture, contracts, tests, README)
+- bump version in src/__init__.py
