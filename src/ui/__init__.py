@@ -1,27 +1,9 @@
-"""UI Layer - Graphical User Interface Skeleton"""
+"""UI Layer - Graphical User Interface"""
 
 import sys
-from typing import Optional
+from pathlib import Path
 
-from PyQt6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QTableWidget,
-    QTableWidgetItem,
-    QLabel,
-    QSpinBox,
-    QLineEdit,
-    QMessageBox,
-    QTabWidget,
-    QDialog,
-    QFormLayout,
-    QDoubleSpinBox,
-)
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 
 from ..adapters.repository import RepositoryFactory
 from ..services import WarehouseService
@@ -240,8 +222,14 @@ class WarehouseMainWindow(QMainWindow):
 
 
 def main():
-    """Hauptprogramm"""
+    """Starte die Lagerverwaltungsanwendung"""
     app = QApplication(sys.argv)
+
+    # QSS-Stylesheet laden
+    style_path = Path(__file__).parent / "style.qss"
+    if style_path.exists():
+        app.setStyleSheet(style_path.read_text(encoding="utf-8"))
+
     window = WarehouseMainWindow()
     window.show()
     sys.exit(app.exec())
