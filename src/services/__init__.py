@@ -1,8 +1,10 @@
 """Services - Business Logic Layer"""
 
-from datetime import datetime
-from typing import Dict, List, Optional
+from .warehouse_service import WarehouseService
 
+<<<<<<< HEAD
+__all__ = ["WarehouseService"]
+=======
 from ..domain.product import Product
 from ..domain.warehouse import Movement, Warehouse
 from ..ports import RepositoryPort
@@ -172,3 +174,4 @@ class WarehouseService:
             raise ValueError(f"Produkt {product_id} nicht gefunden.")
         
         self.repository.delete_product(product_id)
+>>>>>>> feature/rolle2/merge-test-v2

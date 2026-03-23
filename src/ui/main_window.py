@@ -1,10 +1,6 @@
-"""UI Layer - Graphical User Interface"""
-
-import sys
-from PyQt6.QtWidgets import QApplication
+"""Main Window - Hauptfenster der Lagerverwaltung"""
 
 from PyQt6.QtWidgets import (
-    QApplication,
     QMainWindow,
     QWidget,
     QVBoxLayout,
@@ -13,68 +9,13 @@ from PyQt6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QLabel,
-    QSpinBox,
-    QLineEdit,
     QMessageBox,
     QTabWidget,
-    QDialog,
-    QFormLayout,
-    QDoubleSpinBox,
 )
-from PyQt6.QtCore import Qt
 
 from ..adapters.repository import RepositoryFactory
 from ..services import WarehouseService
-
-
-class ProductDialogWindow(QDialog):
-    """Dialog zum Hinzufügen/Bearbeiten von Produkten"""
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Produkt hinzufügen")
-        self.setGeometry(100, 100, 400, 300)
-
-        layout = QFormLayout()
-
-        self.product_id_field = QLineEdit()
-        self.name_field = QLineEdit()
-        self.description_field = QLineEdit()
-        self.price_field = QDoubleSpinBox()
-        self.price_field.setMaximum(999999)
-        self.quantity_field = QSpinBox()
-        self.category_field = QLineEdit()
-
-        layout.addRow("Produkt-ID:", self.product_id_field)
-        layout.addRow("Name:", self.name_field)
-        layout.addRow("Beschreibung:", self.description_field)
-        layout.addRow("Preis (€):", self.price_field)
-        layout.addRow("Menge:", self.quantity_field)
-        layout.addRow("Kategorie:", self.category_field)
-
-        button_layout = QHBoxLayout()
-        ok_btn = QPushButton("OK")
-        cancel_btn = QPushButton("Abbrechen")
-
-        ok_btn.clicked.connect(self.accept)
-        cancel_btn.clicked.connect(self.reject)
-
-        button_layout.addWidget(ok_btn)
-        button_layout.addWidget(cancel_btn)
-
-        layout.addRow(button_layout)
-        self.setLayout(layout)
-
-    def get_data(self):
-        """Eingegebene Daten abrufen"""
-        return {
-            "product_id": self.product_id_field.text(),
-            "name": self.name_field.text(),
-            "description": self.description_field.text(),
-            "price": self.price_field.value(),
-            "quantity": self.quantity_field.value(),
-            "category": self.category_field.text(),
-        }
+from .dialogs import ProductDialogWindow
 
 
 class WarehouseMainWindow(QMainWindow):
@@ -82,18 +23,11 @@ class WarehouseMainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Lagerverwaltungssystem v0.1.0")
+        self.setWindowTitle("Lagerverwaltungssystem v0.2.0")
         self.setGeometry(100, 100, 1000, 600)
 
-        # Repository auswählen (argumente "--repo" und "--db" können über sys.argv übergeben werden)
-        import argparse
-
-        parser = argparse.ArgumentParser(add_help=False)
-        parser.add_argument("--repo", choices=["memory", "sqlite"], default="memory")
-        parser.add_argument("--db", default="data.db")
-        args, _ = parser.parse_known_args()
-
-        self.repository = RepositoryFactory.create_repository(args.repo, db_path=args.db)
+        # Initialisiere Service
+        self.repository = RepositoryFactory.create_repository("memory")
         self.service = WarehouseService(self.repository)
 
         # Erstelle UI
@@ -101,23 +35,15 @@ class WarehouseMainWindow(QMainWindow):
 
     def _create_ui(self):
         """Erstelle die Benutzeroberfläche"""
-        # Zentral-Widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
-        # Hauptlayout
         main_layout = QVBoxLayout()
 
         # Tab-Widget
         self.tabs = QTabWidget()
-
-        # Tab 1: Produkte
         self._create_products_tab()
-
-        # Tab 2: Lagerbewegungen
         self._create_movements_tab()
-
-        # Tab 3: Berichte
         self._create_reports_tab()
 
         main_layout.addWidget(self.tabs)
@@ -160,11 +86,9 @@ class WarehouseMainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout()
 
-        # Info-Label
         info_label = QLabel("Lagerbewegungen werden hier angezeigt")
         layout.addWidget(info_label)
 
-        # Bewegungs-Tabelle
         self.movements_table = QTableWidget()
         self.movements_table.setColumnCount(5)
         self.movements_table.setHorizontalHeaderLabels(
@@ -180,7 +104,6 @@ class WarehouseMainWindow(QMainWindow):
         widget = QWidget()
         layout = QVBoxLayout()
 
-        # Report-Buttons
         button_layout = QHBoxLayout()
         inventory_btn = QPushButton("Lagerbestandsbericht")
         movement_btn = QPushButton("Bewegungsprotokoll")
@@ -231,60 +154,16 @@ class WarehouseMainWindow(QMainWindow):
 
     def _delete_product(self):
         """Produkt löschen"""
-        row = self.products_table.currentRow()
-        if row < 0:
-            QMessageBox.warning(self, "Hinweis", "Bitte wählen Sie ein Produkt in der Tabelle aus.")
-            return
-        product_id_item = self.products_table.item(row, 0)
-        if not product_id_item:
-            return
-        product_id = product_id_item.text()
-        try:
-            self.service.delete_product(product_id)
-            QMessageBox.information(self, "Erfolg", f"Produkt {product_id} gelöscht.")
-            self._refresh_products()
-        except Exception as e:
-            QMessageBox.critical(self, "Fehler", str(e))
+        QMessageBox.information(self, "Info", "Delete-Funktion wird implementiert")
 
     def _show_inventory_report(self):
         """Lagerbestandsbericht anzeigen"""
-        products = self.service.get_all_products()
-        movements = self.service.get_movements()
-        from ..adapters.report import ConsoleReportAdapter
-
-        adapter = ConsoleReportAdapter(products, movements)
-        report = adapter.generate_inventory_report()
-        # längeren Text in Scrollbox anzeigen
-        dlg = QMessageBox(self)
-        dlg.setWindowTitle("Lagerbestandsbericht")
-        dlg.setText(report)
-        dlg.setIcon(QMessageBox.Information)
-        dlg.setStandardButtons(QMessageBox.Ok)
-        dlg.exec()
+        QMessageBox.information(
+            self, "Lagerbestandsbericht", "Report-Funktion wird implementiert"
+        )
 
     def _show_movement_report(self):
         """Bewegungsprotokoll anzeigen"""
-        products = self.service.get_all_products()
-        movements = self.service.get_movements()
-        from ..adapters.report import ConsoleReportAdapter
-
-        adapter = ConsoleReportAdapter(products, movements)
-        report = adapter.generate_movement_report()
-        dlg = QMessageBox(self)
-        dlg.setWindowTitle("Bewegungsprotokoll")
-        dlg.setText(report)
-        dlg.setIcon(QMessageBox.Information)
-        dlg.setStandardButtons(QMessageBox.Ok)
-        dlg.exec()
-
-
-def main():
-    """Starte die Lagerverwaltungsanwendung"""
-    app = QApplication(sys.argv)
-    window = WarehouseMainWindow()
-    window.show()
-    sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()
+        QMessageBox.information(
+            self, "Bewegungsprotokoll", "Report-Funktion wird implementiert"
+        )
