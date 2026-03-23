@@ -67,10 +67,15 @@ Abstrakte Schnittstelle für Report-Generierung.
 report = report_adapter.generate_inventory_report()
 # Rückgabe: "Lagerbestandsbericht vom 24.02.2026..."
 
-# Bewegungsprotokoll
-report = report_adapter.generate_movement_report()
-# Rückgabe: "Bewegungsprotokoll vom 24.02.2026..."
-```
+#### `generate_movement_report() -> str`
+Generiert ein Bewegungsprotokoll.
+
+**Return:**
+- Formatierter String-Bericht
+
+**Implementierungen:**
+- `ConsoleReportAdapter` (v0.1)
+- `InventoryReport` / `MovementReport` (v0.4) – reine Logikklassen (keine Ausgabe)
 
 ---
 
