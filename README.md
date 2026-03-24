@@ -78,7 +78,8 @@ pytest
 # 5. GUI starten
 #
 # Das Programm kann optional ein Repository angeben. verfügbar sind
-# - `memory` (Standard, flüchtig)
+# - `sqlite` (Standard, persistent)
+# - `memory` (flüchtig)
 # - `sqlite` mit zusätzlichem `--db <datei>` Pfad für die DB
 #
 # Auf Windows muss der Parameterblock getrennt werden:

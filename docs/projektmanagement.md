@@ -54,6 +54,12 @@ Entwicklung einer Lagerverwaltungssoftware, die:
 - **Praktisch:** Realistisch für 2 UE/Woche
 - **Lehrreich:** Schüler/innen lernen echtes Vorgehen
 
+### KI-Einsatz im Vorgehen
+- KI wurde als Assistenz für Ideen, Fehlersuche und Formulierung genutzt.
+- Jede übernommene Änderung wurde manuell geprüft und per Tests verifiziert.
+- Architektur-, Contract- und Merge-Entscheidungen wurden vom Team getroffen.
+- Transparente Nachvollziehbarkeit erfolgt in [docs/ki_einsatz.md](ki_einsatz.md).
+
 ---
 
 ## 3. Projektstrukturplan (PSP)

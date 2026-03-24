@@ -54,87 +54,94 @@ refactor(structure): bereinige Code in __init__ Files und verbessere Ordnerstruk
 
 ---
 
-## [v0.3] - [Datum]
+## [v0.3] - 2026-03-17
 
 ### Implementiert
-- [Feature/Fix 1]
+- Peer-Feedback-Runde im Team vorbereitet und durchgeführt
+- Feedback aus den Rollen gesammelt (Schnittstellenklarheit, Doku-Stand, Merge-Vorgehen)
+- Offene Punkte in Contracts und Doku priorisiert
 
 ### Tests geschrieben
-- [Tests]
+- Keine eigenen neuen Tests (Rolle 1 Fokus: Koordination & Qualitätssicherung)
 
 ### Commits
 ```
-- [Commits]
+- docs: peer feedback erfasst und Follow-ups für Team vorbereitet
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte, falls vorhanden]
+- Konfliktanalyse unterstützt und Lösungsstrategie mit Team abgestimmt
 
 ---
 
-## [v0.4] - [Datum]
+## [v0.4] - 2026-03-24
 
 ### Implementiert
-- [Feature/Fix]
+- Mergekonflikt-Dokumentation erstellt und nachvollziehbar strukturiert
+- Abgleich Projektstand gegen Aufgabenkriterien durchgeführt
+- PM-/Retro-/KI-Dokumentation vervollständigt und aktualisiert
+- Versionierungsstand (Tags) geprüft und ergänzt
 
 ### Tests geschrieben
-- [Tests]
+- Keine neuen Unit-Tests, aber Teststatus validiert (Suite grün)
 
 ### Commits
 ```
-- [Commits]
+- docs: mergekonflikt dokumentation
+- docs: retrospective und KI-Einsatz ergänzt
+- chore: version tags für Meilensteine ergänzt
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- Konflikte in UI-/Dokubereich analysiert, bereinigt und dokumentiert
 
 ---
 
-## [v0.5] - [Datum]
+## [v0.5] - Offen
 
 ### Implementiert
-- [Feature/Fix]
+- Stabilisierungsschritte vorbereitet (offene Doku-/Contract-Punkte)
 
 ### Tests geschrieben
-- [Tests]
+- Laufende Regressionstests bei Änderungen
 
 ### Commits
 ```
-- [Commits]
+- folgt mit v0.5-Abschluss
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- Keine neuen
 
 ---
 
-## [v1.0] - [Datum]
+## [v1.0] - Offen
 
 ### Implementiert
-- [Feature/Fix]
+- Finalisierung ausständig
 
 ### Tests geschrieben
-- [Tests]
+- Finale Abnahmetests ausständig
 
 ### Commits
 ```
-- [Commits]
+- folgt zu v1.0
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- Offen
 
 ---
 
 ## Zusammenfassung
 
-**Gesamt implementierte Features:** [Anzahl]  
-**Gesamt geschriebene Tests:** [Anzahl]  
-**Gesamt Commits:** [Anzahl]  
-**Größte Herausforderung:** [Beschreibung]  
-**Schönste Code-Zeile:** [Code-Snippet]
+**Gesamt implementierte Features:** Fokus auf Koordination, Contracts, Konfliktlösung und Projektdokumentation  
+**Gesamt geschriebene Tests:** Keine direkten neuen Tests (Rolle 1 Schwerpunkt)  
+**Gesamt Commits:** Siehe Git-Historie Rolle 1 Branch/Integration  
+**Größte Herausforderung:** Mergekonflikte mit parallel veränderten Team-Dateien sauber und nachvollziehbar lösen  
+**Schönste Code-Zeile:** `parser.add_argument("--repo", choices=["memory", "sqlite"], default="sqlite")`
 
 ---
 
-**Changelog erstellt von:** [Name]  
-**Letzte Aktualisierung:** [Datum]
+**Changelog erstellt von:** Pia Endlich (Rolle 1)  
+**Letzte Aktualisierung:** 2026-03-24

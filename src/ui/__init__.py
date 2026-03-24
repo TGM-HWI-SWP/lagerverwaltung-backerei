@@ -6,6 +6,7 @@ konsistent funktionieren.
 """
 
 import sys
+import argparse
 from pathlib import Path
 
 from PyQt6.QtWidgets import QApplication
@@ -18,6 +19,11 @@ __all__ = ["WarehouseMainWindow", "ProductDialogWindow", "StockDialog", "main"]
 
 def main():
     """Starte die Lagerverwaltungsanwendung"""
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--repo", choices=["memory", "sqlite"], default="sqlite")
+    parser.add_argument("--db", default="lagerverwaltung.db")
+    args, _ = parser.parse_known_args()
+
     app = QApplication(sys.argv)
 
     # QSS-Stylesheet laden
@@ -25,7 +31,7 @@ def main():
     if style_path.exists():
         app.setStyleSheet(style_path.read_text(encoding="utf-8"))
 
-    window = WarehouseMainWindow()
+    window = WarehouseMainWindow(repository_type=args.repo, db_path=args.db)
     window.show()
     sys.exit(app.exec())
 

@@ -5,172 +5,170 @@
 **Projekttitel:** Lagerverwaltungssystem  
 **Projektdauer:** 8 Wochen  
 **Gruppengröße:** 4 Personen  
-**Projektverantwortung:** [Name Rolle 1]
+**Projektverantwortung:** Pia Endlich (Rolle 1)
 
 ---
 
 ## Versionsmilestones
 
 ### v0.1 - Projektstart & Grundarchitektur
-**Abschluss:** [Datum]
+**Abschluss:** 2026-02-03
 
 #### Was lief gut?
-- [ ] Klare Rollenverteilung
-- [ ] Erste Architektur aufgebaut
-- [ ] Team-Kommunikation etabliert
-- [ ] [Weiteres...]
+- Klare Rollenverteilung und Verantwortlichkeiten
+- Erste Port-/Adapter-Struktur stand früh
+- Teamkommunikation über Branches und kurze Abstimmungen
+- Früher Start mit Repository-Konventionen
 
 #### Was konnte verbessert werden?
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
-- [ ] [Punkt 3]
+- Frühere Abstimmung über Dateibereiche, um Konflikte zu reduzieren
+- Genauere Definition der Persistenzstrategie von Anfang an
+- Früheres Einführen fixer Review-Routinen
 
 #### Learnings
-- [Gelernte Lessons]
+- Ein sauberer Projektstart reduziert spätere Integrationskosten deutlich.
 
 ---
 
 ### v0.2 - Walking Skeleton
-**Abschluss:** [Datum]
+**Abschluss:** 2026-02-24
 
 #### Was lief gut?
-- [ ] Schnittstellen dokumentiert
-- [ ] Basis-Tests geschrieben
-- [ ] Git-Workflow etabliert
-- [ ] [Weiteres...]
+- Schnittstellen zentral in `contracts.md` dokumentiert
+- Walking Skeleton über alle Schichten funktionsfähig
+- Grundlegender Git-Workflow im Team etabliert
+- Struktur-Refactoring (`__init__` bereinigt, Module getrennt)
 
 #### Was konnte verbessert werden?
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
+- Dokumente konsequenter synchron zu Code-Änderungen halten
+- Merge-Strategie früher üben statt erst bei Konfliktfällen
 
 #### Learnings
-- [Gelernte Lessons]
+- Eine dokumentierte Schnittstelle ist die zentrale Integrationsgrundlage.
 
 ---
 
 ### v0.3 - Kernlogik & GUI
-**Abschluss:** [Datum]
+**Abschluss:** 2026-03-03
 
 #### Was lief gut?
-- [ ] Businesslogik stabil
-- [ ] GUI-Skeleton funktioniert
-- [ ] Services-Layer gut strukturiert
-- [ ] [Weiteres...]
+- Kernlogik für Produktverwaltung und Lagerbewegungen stabilisiert
+- GUI-Skeleton inkl. Produktverwaltung funktional
+- Service-Layer klar strukturiert
+- Erste End-to-End-Workflows über UI möglich
 
 #### Was konnte verbessert werden?
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
+- Paralleländerungen an zentralen Dateien besser koordinieren
+- Mehr Integrationsprüfungen während der Woche
 
 #### Learnings
-- [Gelernte Lessons]
+- Kleine, häufige Integrationen sind wichtiger als große Sammelmerges.
 
 ---
 
 ### v0.4 - Reports
-**Abschluss:** [Datum]
+**Abschluss:** 2026-03-17
 
 #### Was lief gut?
-- [ ] Report A implementiert
-- [ ] Report B implementiert
-- [ ] Tests geschrieben
-- [ ] [Weiteres...]
+- Report A und Report B als eigene Komponenten umgesetzt
+- Reports testbar und deterministisch ausgeführt
+- Testumfang deutlich erhöht (inkl. GUI- und Report-Tests)
+- Struktur für Export/Anzeige in UI verbessert
 
 #### Was konnte verbessert werden?
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
+- Metriken in Tests und Doku (Coverage/Performance) einheitlicher führen
+- Changelogs früher laufend pflegen statt gesammelt nachzutragen
 
 #### Learnings
-- [Gelernte Lessons]
+- Reporting funktioniert am besten als entkoppelte, reine Logikkomponente.
 
 ---
 
 ### v0.5 - Tests & Stabilisierung
-**Abschluss:** [Datum]
+**Abschluss:** 2026-03-24
 
 #### Was lief gut?
-- [ ] Test-Coverage erhöht
-- [ ] Bugs gefunden und gefixt
-- [ ] Code optimiert
-- [ ] [Weiteres...]
+- Testsuite stabilisiert, alle Tests grün
+- Mehrere Inkonsistenzen zwischen Tests und Implementierung behoben
+- Build-/Start-Komfort über `pyproject.toml` verbessert
+- Mergekonflikte nachvollziehbar dokumentiert
 
 #### Was konnte verbessert werden?
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
+- Versions- und Tag-Strategie früher konsequent umsetzen
+- Verbleibende Dokument-Templates früher schließen
 
 #### Learnings
-- [Gelernte Lessons]
+- Stabilisierung ist ein eigener Arbeitsschritt und braucht feste Zeit im Plan.
 
 ---
 
 ### v1.0 - Finale & Präsentation
-**Abschluss:** [Datum]
+**Abschluss:** Offen (in Arbeit)
 
 #### Was lief gut?
-- [ ] Alle Features fertig
-- [ ] Dokumentation vollständig
-- [ ] Präsentation gut gelaufen
-- [ ] [Weiteres...]
+- Finalisierungsplan ist klar definiert
+- Offene Punkte sind identifiziert und priorisiert
 
 #### Was konnte verbessert werden?
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
+- Frühere Vorbereitung der finalen Abgabedokumente (PDFs)
+- Endabnahme-Checkliste schon zu Beginn der letzten Iteration verwenden
 
 #### Learnings
-- [Gelernte Lessons]
+- Eine klare Done-Definition pro Artefakt verhindert Last-Minute-Fehler.
 
 ---
 
 ## Überblick: Stärken & Schwächen
 
 ### Team-Stärken
-- [ ] Kommunikation
-- [ ] Code-Qualität
-- [ ] Zusammenarbeit
-- [ ] Problem-Solving
-- [ ] Dokumentation
+- Kommunikation
+- Code-Qualität
+- Zusammenarbeit
+- Problem-Solving
+- Dokumentation
 
 ### Verbesserungspotenzial
-- [ ] [Bereich 1]
-- [ ] [Bereich 2]
-- [ ] [Bereich 3]
+- Dokumentation durchgehend aktuell halten
+- Branch-/Merge-Disziplin bei parallel bearbeiteten Dateien
+- Einheitliche Versionierungsroutine über alle Milestones
 
 ### Einzelne Learnings pro Rolle
 
 #### Rolle 1 (Contract Owner)
-- Gelernt: [...]
-- Verbessern: [...]
+- Gelernt: Schnittstellen zentral zu führen, Konflikte strukturiert aufzulösen
+- Verbessern: Noch frühere Eskalation bei parallelen Dateikonflikten
 
 #### Rolle 2 (Businesslogik & Report A)
-- Gelernt: [...]
-- Verbessern: [...]
+- Gelernt: Deterministische Businesslogik vereinfacht Testing und UI-Integration
+- Verbessern: Contracts bei Methodenerweiterungen sofort mitziehen
 
 #### Rolle 3 (Report B & Tests)
-- Gelernt: [...]
-- Verbessern: [...]
+- Gelernt: Randfalltests decken Integrationsprobleme früh auf
+- Verbessern: Testmetriken und Doku enger synchronisieren
 
 #### Rolle 4 (GUI & Interaktion)
-- Gelernt: [...]
-- Verbessern: [...]
+- Gelernt: UI-Entwicklung profitiert stark von klaren Service-Contracts
+- Verbessern: Frühere Abstimmung bei Änderungen in zentralen UI-Dateien
 
 ---
 
 ## Technische Erkenntnisse
 
 ### Was funktioniert gut?
-- Port-Adapter-Architektur: [Feedback]
-- Testing-Ansatz: [Feedback]
-- Git-Workflow: [Feedback]
-- [Weiteres...]
+- Port-Adapter-Architektur: gut testbar, Adapter austauschbar
+- Testing-Ansatz: breite Abdeckung von Domain, Service, Reports, GUI
+- Git-Workflow: grundsätzlich etabliert und nachvollziehbar
+- Modulstruktur: gute Trennung von UI, Services, Domain und Adapters
 
 ### Technische Schulden
-- [ ] [Punkt 1]
-- [ ] [Punkt 2]
-- [ ] [Punkt 3]
+- Dokumente mit Template-Resten vollständig schließen
+- Contracts fortlaufend an neue Service-Methoden anpassen
+- Persistenz-Default und UI-Startverhalten klar dokumentieren
 
 ### Empfehlungen für Folge-Projekte
-1. [Empfehlung 1]
-2. [Empfehlung 2]
-3. [Empfehlung 3]
+1. Pro Woche fixer Integrationsslot mit gemeinsamem Merge & Testlauf
+2. Definition of Done inkl. Doku-/Tag-/Konfliktnachweis pro Milestone
+3. Einheitliche Commit-Konvention und Review-Checkliste verbindlich nutzen
 
 ---
 
@@ -178,30 +176,30 @@
 
 | Datei | Konflikt-Typ | Lösung | Gelerntes |
 |-------|-------------|--------|----------|
-| [Datei] | [Typ] | [Lösung] | [Lesson] |
-| | | | |
+| `docs/contracts.md` | Content-Konflikt | Beide Änderungen manuell integriert, Marker entfernt, erneut getestet | Konflikte nicht mit `--ours/--theirs` blind lösen |
+| `src/ui/__init__.py` | Content-Konflikt | Alte/duplizierte Logik verworfen, modulare Re-Export-Struktur beibehalten | Verantwortlichkeiten pro Modul strikt trennen |
 
 ---
 
 ## Abschließende Bewertung
 
 ### Projektqualität (1-10)
-- Code-Qualität: [ ]
-- Dokumentation: [ ]
-- Tests: [ ]
-- Zusammenarbeit: [ ]
-- **Durchschnitt:** [ ]
+- Code-Qualität: 8
+- Dokumentation: 7
+- Tests: 9
+- Zusammenarbeit: 8
+- **Durchschnitt:** 8.0
 
 ### Was würde ich anders machen?
-1. [Punkt 1]
-2. [Punkt 2]
-3. [Punkt 3]
+1. Bereits ab v0.2 verbindliche Merge- und Doku-Checkliste nutzen
+2. Changelogs wöchentlich abschließen statt blockweise
+3. Contracts als Pflicht-Reviewpunkt vor jedem Merge behandeln
 
 ### Feedback an die Lehrperson
-- [Feedback 1]
-- [Feedback 2]
+- Die Rollenstruktur war praxisnah und hilfreich für Teamverantwortung.
+- Mergekonflikte als Lernziel waren sinnvoll und realitätsnah.
 
 ---
 
-**Retrospektive erstellt:** [Datum]  
-**Geschrieben von:** [Name + Rolle]
+**Retrospektive erstellt:** 2026-03-24  
+**Geschrieben von:** Projektteam (koordiniert durch Rolle 1)

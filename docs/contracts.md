@@ -1,8 +1,8 @@
 # Schnittstellen-Dokumentation (Contracts)
 
-**Version:** 0.2.0  
+**Version:** 0.4.0  
 **Verantwortlich:** Rolle 1 (Contract Owner)  
-**Letzte Aktualisierung:** 24. Februar 2026
+**Letzte Aktualisierung:** 24. März 2026
 
 Diese Datei ist die **zentrale Spezifikation** aller Schnittstellen (Ports) im Projekt. Alle neuen Features müssen hier dokumentiert werden BEVOR sie implementiert werden!
 
@@ -56,16 +56,18 @@ Abstrakte Schnittstelle für Report-Generierung.
 
 ### Methoden
 
-| Methode | Input | Output | v0.1 | v0.2 |
-|---------|-------|--------|------|------|
-| `generate_inventory_report()` | - | str | ✅ | ✅ |
-| `generate_movement_report()` | - | str | ✅ | ✅ |
+| Methode | Input | Output | v0.1 | v0.2 | v0.4 |
+|---------|-------|--------|------|------|------|
+| `generate_inventory_report()` | - | str | ✅ | ✅ | ✅ |
+| `generate_movement_report()` | - | str | ✅ | ✅ | ✅ |
+| `generate_statistics_report()` | - | str | - | - | ✅ |
 
 **Beispiele:**
 ```python
 # Lagerbestandsbericht
 report = report_adapter.generate_inventory_report()
 # Rückgabe: "Lagerbestandsbericht vom 24.02.2026..."
+```
 
 #### `generate_movement_report() -> str`
 Generiert ein Bewegungsprotokoll.
@@ -76,6 +78,9 @@ Generiert ein Bewegungsprotokoll.
 **Implementierungen:**
 - `ConsoleReportAdapter` (v0.1)
 - `InventoryReport` / `MovementReport` (v0.4) – reine Logikklassen (keine Ausgabe)
+
+#### `generate_statistics_report() -> str`
+Generiert Statistik über Lagerbewegungen (Ein-/Ausgänge, Typen, Top-Produkte).
 
 ---
 
@@ -150,7 +155,10 @@ for product_id, product in all.items():
 ```
 
 #### `delete_product(product_id)` → None
-Löscht ein Produkt. Ignoriert unbekannte IDs.
+Löscht ein Produkt.
+
+**Exceptions:**
+- `ValueError`: Wenn Produkt nicht existiert
 
 ```python
 service.delete_product("PRD-001")
@@ -230,6 +238,24 @@ total_value = service.get_total_inventory_value()
 print(f"Gesamtwert: {total_value:.2f}€")
 ```
 
+#### `generate_movement_report()` → str
+Erzeugt das Bewegungsprotokoll über den Report-Adapter.
+
+#### `generate_inventory_report()` → str
+Erzeugt den Lagerbestandsbericht über den Report-Adapter.
+
+#### `generate_statistics_report()` → str
+Erzeugt den Statistikreport über den Report-Adapter.
+
+#### `adjust_stock_inventory(product_id, new_quantity, user, reason)` → None
+Setzt den Bestand auf einen Zielwert und protokolliert die Differenz als Bewegungstyp `ADJUST`.
+
+**Exceptions:**
+- `ValueError`: Wenn Produkt nicht existiert
+
+#### `update_category_prices(category, factor)` → None
+Passt Preise einer Kategorie mit einem Multiplikator an (`new_price = old_price * (1 + factor)`).
+
 ---
 
 ## 4. Domain Models
@@ -285,7 +311,7 @@ class Movement:
     product_id: str                            # Referenz zu Product
     product_name: str                          # Name (Snapshot)
     quantity_change: int                       # Menge (+/-)
-    movement_type: str                         # "IN" oder "OUT"
+    movement_type: str                         # "IN", "OUT", "ADJUST" (historisch auch "CORRECTION")
     reason: str = ""                           # Grund
     performed_by: str = "system"              # Nutzer/System
     timestamp: datetime = field(default_factory=datetime.now)
@@ -328,7 +354,7 @@ src/
 │   ├── main_window.py        # WarehouseMainWindow Klasse
 │   └── dialogs.py            # ProductDialogWindow Klasse
 │
-├── reports/                   # Report-Templates (zukünftig)
+├── reports/                   # Reine Report-Logikklassen
 │   └── __init__.py
 │
 └── __init__.py
@@ -423,6 +449,9 @@ def test_create_product():
 | In-Memory Repository | ✅ | ✅ | ✅ | ✅ |
 | Movement-Logging | ✅ | ✅ | ✅ | ✅ |
 | Basic Reports | ✅ | ✅ | ✅ | ✅ |
+| Statistics Report | - | - | - | ✅ |
+| Inventory Adjustment (`ADJUST`) | - | - | ✅ | ✅ |
+| Category Price Update | - | - | ✅ | ✅ |
 | **PyQt6 UI** | ⚠️ | ✅ | ✅ | ✅ |
 | **SQLite Repository** | - | - | ✅ | ✅ |
 | **Product Kategorien** | - | ✅ | ✅ | ✅ |
@@ -450,9 +479,7 @@ def test_create_product():
 
 ---
 
----
-
-## 10. GUI-Schnittstellen (Rolle 4)
+## 11. GUI-Schnittstellen (Rolle 4)
 
 **Verantwortlich:** Rolle 4
 **Dateien:** `src/ui/main_window.py`, `src/ui/dialogs.py`

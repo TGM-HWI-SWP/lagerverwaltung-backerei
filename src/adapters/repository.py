@@ -198,3 +198,9 @@ class SQLiteRepository(InMemoryRepository):
             ),
         )
         self.conn.commit()
+
+    def close(self) -> None:
+        """Schließt die SQLite-Verbindung sauber."""
+        if getattr(self, "conn", None) is not None:
+            self.conn.close()
+            self.conn = None

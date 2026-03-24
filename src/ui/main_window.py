@@ -33,19 +33,29 @@ STOCK_WARNING = 15
 class WarehouseMainWindow(QMainWindow):
     """Hauptfenster der Lagerverwaltungsanwendung"""
 
-    def __init__(self):
+    def __init__(self, repository_type: str = "memory", db_path: str = "data.db"):
         super().__init__()
         self.setWindowTitle("Lagerverwaltungssystem v0.4.0")
         self.setGeometry(100, 100, 1100, 700)
         self.setMinimumSize(800, 500)
 
         # Initialisiere Service
-        self.repository = RepositoryFactory.create_repository("memory")
+        self.repository = RepositoryFactory.create_repository(
+            repository_type,
+            db_path=db_path,
+        )
         self.service = WarehouseService(self.repository)
 
         # Erstelle UI
         self._create_ui()
         self._create_status_bar()
+
+    def closeEvent(self, event):
+        """Schließt offene Ressourcen beim Beenden der Anwendung."""
+        close_fn = getattr(self.repository, "close", None)
+        if callable(close_fn):
+            close_fn()
+        super().closeEvent(event)
 
     def _create_ui(self):
         """Erstelle die Benutzeroberfläche"""
