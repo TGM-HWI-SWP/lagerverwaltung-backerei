@@ -35,7 +35,7 @@ class WarehouseMainWindow(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Lagerverwaltungssystem v0.3.0")
+        self.setWindowTitle("Lagerverwaltungssystem v0.4.0")
         self.setGeometry(100, 100, 1100, 700)
         self.setMinimumSize(800, 500)
 

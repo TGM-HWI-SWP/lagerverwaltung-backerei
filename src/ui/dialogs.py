@@ -9,7 +9,6 @@ from PyQt6.QtWidgets import (
     QSpinBox,
     QDoubleSpinBox,
     QLabel,
-    QComboBox,
 )
 
 
