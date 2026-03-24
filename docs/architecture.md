@@ -295,5 +295,5 @@ service.create_product("TEST-001", "Test Product", "Test", 100.0, initial_quanti
 
 ---
 
-**Letzte Aktualisierung:** 2025-01-20
-**Version:** 0.1
+**Letzte Aktualisierung:** 2026-03-24
+**Version:** 0.4.0

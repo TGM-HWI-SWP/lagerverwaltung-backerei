@@ -46,7 +46,7 @@
 
 ```bash
 # 1. Dependencies installieren
-pip install -r pyproject.toml
+pip install -e .
 
 # 2. App starten
 python -m src.ui

@@ -290,6 +290,6 @@ Legende:
 
 ---
 
-**Projektmanagement-Dokumentation v0.1**  
-**Erstellt:** 2025-01-20  
-**Aktualisiert von:** [Rolle 1]
+**Projektmanagement-Dokumentation v0.4.0**
+**Erstellt:** 2025-01-20
+**Aktualisiert von:** Pia Endlich (Rolle 1)

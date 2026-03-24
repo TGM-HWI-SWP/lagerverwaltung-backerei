@@ -68,21 +68,27 @@ Persönliches Changelog für Noah Bodner, Rolle: Rolle 4 - GUI & Interaktion
 
 ---
 
-## [v0.4] - [Datum]
+## [v0.4] - 2026-03-24
 
 ### Implementiert
-- [Ausstehend: Report B von Rolle 3 in GUI einbinden]
+- Fix: `src/ui/__init__.py` enthielt veraltete GUI-Kopie (v0.1) – ersetzt durch Re-Exports aus `main_window.py` und `dialogs.py`
+- `src/ui/__main__.py` hinzugefügt, damit `python -m src.ui` funktioniert
+- Versionsnummer im Fenstertitel auf v0.4.0 aktualisiert (passt zu pyproject.toml)
+- Unused `QComboBox`-Import in `dialogs.py` entfernt
+- Alle MD-Dateien auf v0.4.0 aktualisiert (Versionen, known_issues, tests.md)
 
 ### Tests geschrieben
-- [Tests]
+- Keine neuen Tests (alle 110 bestehenden Tests bestanden nach Fix)
 
 ### Commits
 ```
-- [Commits]
+- Fix: UI __init__.py used old GUI instead of main_window.py
+- Feat: add __main__.py so `python -m src.ui` works
+- Docs: update all MD files to v0.4.0, fix outdated versions and placeholders
 ```
 
 ### Mergekonflikt(e)
-- [Konflikte]
+- Keine
 
 ---
 

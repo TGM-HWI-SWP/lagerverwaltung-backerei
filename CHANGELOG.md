@@ -5,6 +5,44 @@ Alle wichtigen Änderungen in diesem Projekt werden in dieser Datei dokumentiert
 Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/),
 und dieses Projekt folgt [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] – 2026-03-24
+
+### ✅ Added
+- **GUI-Fix:** `__init__.py` verwendet jetzt `main_window.py` statt veraltete Kopie
+- **`__main__.py`** hinzugefügt – `python -m src.ui` funktioniert jetzt korrekt
+- **Versionsnummer** im Fenstertitel auf v0.4.0 aktualisiert
+
+### 🔧 Fixed
+- Doppelte `WarehouseMainWindow`-Klasse entfernt (alte v0.1-Kopie in `__init__.py`)
+- Doppelter `QApplication`-Import entfernt
+- Unused `QComboBox`-Import in `dialogs.py` entfernt
+
+---
+
+## [0.3.0] – 2026-03-03
+
+### ✅ Added
+- **Komplette GUI** (Rolle 4): Suchfunktion, Bestandsfarben, Statusleiste, Export
+- **Dialoge:** ProductDialogWindow (Add/Edit), StockDialog (Ein-/Auslagern)
+- **Bäckerei-Theme:** QSS-Stylesheet mit warmen Farben
+- **39 GUI-Tests** in `tests/unit/test_gui.py`
+- **Manueller Testplan** in `docs/gui_testplan.md`
+- **SQLite-Repository** als persistente Speicheroption (Rolle 2)
+- **Modulare Reports:** `InventoryReport` und `MovementReport` als eigenständige Klassen (Rolle 2)
+- **Report B:** Statistikreport mit Bewegungstypen und Top-Produkte (Rolle 3)
+- **Erweiterte Tests:** `test_reports.py`, `test_warehouse_service.py`, `test_sqlite_repository.py` (Rolle 3)
+- **Test-Fixtures:** `tests/fixtures.py` mit Dummy-Daten und Edge Cases
+
+### 📋 Features
+- Bestandsfarben: Rot (kritisch <=5), Orange (knapp 6-15), Grün (>15)
+- Farbige Bewegungstypen (IN=grün, OUT=rot)
+- Farbige Buttons (Löschen=rot, Einlagern=grün, Auslagern=orange)
+- Report-Export als .txt-Datei
+- Echtzeit-Suchfilter (Name, ID, Kategorie, case-insensitive)
+- WarehouseService erweitert: `delete_product`, `filter_movements_by_date/type`, `adjust_stock_inventory`, `get_low_stock_items`, `update_category_prices`
+
+---
+
 ## [0.2.0] – 2026-02-24
 
 ### ✅ Added

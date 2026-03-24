@@ -270,9 +270,9 @@ Diese Vorlage ist:
 
 ---
 
-**Vorlage:** v0.1  
-**Erstellt:** 2025-01-20  
-**Für:** 8-Wochen Softwareentwicklung & Projektmanagement  
+**Vorlage:** v0.4.0
+**Erstellt:** 2025-01-20
+**Für:** 8-Wochen Softwareentwicklung & Projektmanagement
 **Status:** ✅ Fertig und bereit zur Verwendung
 
 ---

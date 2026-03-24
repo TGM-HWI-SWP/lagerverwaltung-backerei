@@ -504,12 +504,12 @@ Hauptfenster mit 3 Tabs und Statusleiste.
 
 ---
 
-**Status:** v0.3.0 stabil
-**Nächste Review:** Vor v0.4 Release
+**Status:** v0.4.0 stabil
+**Nächste Review:** Vor v0.5 Release
 
-- [ ] SQLite-Adapter implementieren
-- [ ] Report B (Rolle 3) in GUI einbinden
+- [x] SQLite-Adapter implementieren (v0.3)
+- [x] Delete Product mit Bestätigungsdialog (v0.3)
+- [ ] Report B (Statistik) in GUI einbinden
 - [ ] GraphML-Report-Generierung
 - [ ] Benutzer-Management erweitern
 - [ ] Batch-Operationen unterstützen
-- [ ] **Delete Product mit Bestätigungsdialog hinzufügen** (v0.3)

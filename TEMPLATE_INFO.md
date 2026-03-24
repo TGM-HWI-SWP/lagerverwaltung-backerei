@@ -213,6 +213,6 @@ Schulprojekt - TGM (Die Schule der Technik)
 
 ---
 
-**Version:** 0.1  
-**Erstellt:** 2025-01-20  
+**Version:** 0.4.0
+**Erstellt:** 2025-01-20
 **Für:** Softwareentwicklung & Projektmanagement, 5. Jahrgang, 7-8 Wochen

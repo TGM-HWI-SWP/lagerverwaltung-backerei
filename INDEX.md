@@ -241,7 +241,7 @@ git commit -m "Initial: Projektvorlage v0.1"
 
 ---
 
-**Version:** 0.1  
-**Erstellt:** 2025-01-29 
-**Für:** 5. Jahrgang Softwareentwicklung & Projektmanagement  
+**Version:** 0.4.0
+**Erstellt:** 2025-01-29
+**Für:** 5. Jahrgang Softwareentwicklung & Projektmanagement
 **Bearbeitungszeit:** 7-8 Wochen | 2 UE pro Woche
