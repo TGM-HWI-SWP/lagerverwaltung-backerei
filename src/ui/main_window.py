@@ -50,6 +50,10 @@ class WarehouseMainWindow(QMainWindow):
         self._create_ui()
         self._create_status_bar()
 
+        # Beim Start sofort Daten aus Repository anzeigen
+        self._refresh_products()
+        self._refresh_movements()
+
     def closeEvent(self, event):
         """Schließt offene Ressourcen beim Beenden der Anwendung."""
         close_fn = getattr(self.repository, "close", None)

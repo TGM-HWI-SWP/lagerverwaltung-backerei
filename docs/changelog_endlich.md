@@ -81,6 +81,8 @@ refactor(structure): bereinige Code in __init__ Files und verbessere Ordnerstruk
 - Abgleich Projektstand gegen Aufgabenkriterien durchgeführt
 - PM-/Retro-/KI-Dokumentation vervollständigt und aktualisiert
 - Versionierungsstand (Tags) geprüft und ergänzt
+- SQLite-Persistenz im Startpfad abgesichert (stabiler absoluter DB-Pfad im Projektordner)
+- GUI-Start verbessert: Produkt- und Bewegungsdaten werden beim Öffnen automatisch geladen
 
 ### Tests geschrieben
 - Keine neuen Unit-Tests, aber Teststatus validiert (Suite grün)
@@ -90,6 +92,7 @@ refactor(structure): bereinige Code in __init__ Files und verbessere Ordnerstruk
 - docs: mergekonflikt dokumentation
 - docs: retrospective und KI-Einsatz ergänzt
 - chore: version tags für Meilensteine ergänzt
+- fix(ui): sqlite default path stabilisiert und auto-refresh beim Start aktiviert
 ```
 
 ### Mergekonflikt(e)

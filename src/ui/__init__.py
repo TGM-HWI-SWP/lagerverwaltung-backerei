@@ -19,10 +19,17 @@ __all__ = ["WarehouseMainWindow", "ProductDialogWindow", "StockDialog", "main"]
 
 def main():
     """Starte die Lagerverwaltungsanwendung"""
+    project_root = Path(__file__).resolve().parents[2]
+    default_db_path = project_root / "lagerverwaltung.db"
+
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--repo", choices=["memory", "sqlite"], default="sqlite")
-    parser.add_argument("--db", default="lagerverwaltung.db")
+    parser.add_argument("--db", default=str(default_db_path))
     args, _ = parser.parse_known_args()
+
+    db_path = Path(args.db)
+    if not db_path.is_absolute():
+        db_path = project_root / db_path
 
     app = QApplication(sys.argv)
 
@@ -31,7 +38,7 @@ def main():
     if style_path.exists():
         app.setStyleSheet(style_path.read_text(encoding="utf-8"))
 
-    window = WarehouseMainWindow(repository_type=args.repo, db_path=args.db)
+    window = WarehouseMainWindow(repository_type=args.repo, db_path=str(db_path))
     window.show()
     sys.exit(app.exec())
 
